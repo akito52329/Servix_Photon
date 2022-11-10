@@ -219,6 +219,8 @@ public class GameDirector : MonoBehaviourPunCallbacks
             cardGeneration.Generation(textMove.round == 1);
             cardGeneration.CardChenge();
         }
+
+        precedence = !precedence;
         /*
         if (PhotonNetwork.IsMasterClient)
         { 
@@ -242,6 +244,7 @@ public class GameDirector : MonoBehaviourPunCallbacks
     {
         foreach(Button b in bottonsParent.GetComponentsInChildren<Button>())
         {
+            Debug.Log("66");
             b.interactable = checke;
         }
     }
