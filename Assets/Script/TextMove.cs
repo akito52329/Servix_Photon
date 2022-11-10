@@ -10,8 +10,10 @@ public class TextMove : MonoBehaviour
     [SerializeField] GameDirector.GameState nextState;
     [SerializeField] AudioController audio;
     [SerializeField] private float centerPos = 0;
-    [SerializeField] TextMeshProUGUI roundText;
-    [SerializeField] TextMeshProUGUI roundDisplayText;
+    [SerializeField] Text roundText;
+    [SerializeField] Text roundDisplayText;
+    [SerializeField] string roundName = "ラウンド ";
+    [SerializeField] string finalRoundName = "ファイナル ラウンド";
 
     [SerializeField] private int finalRound = 10;
     private int _round = 1;
@@ -52,13 +54,13 @@ public class TextMove : MonoBehaviour
     {
         if(round < finalRound)
         {
-            roundText.text = "ラウンド " + _round.ToString();
-            roundDisplayText.text = "ラウンド " + _round.ToString();
+            roundText.text = roundName + _round.ToString();
+            roundDisplayText.text = roundName + _round.ToString();
         }
         else
         {
-            roundText.text = "ファイナル ラウンド";
-            roundDisplayText.text = "ファイナル ラウンド";
+            roundText.text = finalRoundName;
+            roundDisplayText.text = finalRoundName;
         }
     }
 

@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-using DG.Tweening;
-using TMPro;
 
 public class SearchList : MonoBehaviour
 {
-    [SerializeField] TMP_Dropdown[] dropdowns;//検索項目
+    [SerializeField] Dropdown[] dropdowns;//検索項目
                                               //0:色
                                               //1:数字
                                               //2:語尾or頭文字

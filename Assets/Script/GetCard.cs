@@ -37,25 +37,16 @@ public class GetCard : MonoBehaviour
             }
         }
     }
-
-    public void ClickCard(GameObject card)//ボタンが押されたときに
-    {
-        if (_onClickCount <= cardGene.clickObject.Length)
-        {
-            cardGene.clickObject[_onClickCount] = card;
-            SelectCard();
-        }
-    }
-
+    /*
     public void ClickCard(Button button)//ボタンが押されたときに
     {
         if (_onClickCount <= cardGene.clickObject.Length)
         {
             button.interactable = false;
         }
-    }
+    }*/
 
-    private void SelectCard()
+    public void SelectCard()
     {
         numberUi[_onClickCount].transform.position = cardGene.clickObject[_onClickCount].transform.position;
     }

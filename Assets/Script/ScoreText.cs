@@ -12,8 +12,8 @@ public class ScoreText : MonoBehaviour
     [SerializeField] RoleCheck roleCheck;
 
     [SerializeField] TextMeshProUGUI scoreText;
-    [SerializeField] TextMeshProUGUI myTotalScoreText;
-    public TextMeshProUGUI yourTotalScoreText;
+    [SerializeField] Text myTotalScoreText;
+    public Text yourTotalScoreText;
 
     //各役表示
     [SerializeField] TextMeshProUGUI stepText;
@@ -25,6 +25,18 @@ public class ScoreText : MonoBehaviour
     [SerializeField] TextMeshProUGUI toikindText;
     [SerializeField] TextMeshProUGUI colorText;
 
+    /// <summary>
+    /// 各役表示
+    /// 0:色役
+    /// 1:しりとり役
+    /// 2:同種役
+    /// 3:階段役
+    /// 4:ラッキー役
+    /// 5:4STEP役
+    /// 6:二種役:
+    /// 7:対種役
+    /// </summary>
+    [SerializeField] List<Text> roleTexts;
 
     [SerializeField] private int scoreStandard = 100;//スコア１つ当たりの倍率
     public int totalScore;
@@ -70,6 +82,9 @@ public class ScoreText : MonoBehaviour
 
         scoreText.text = _score.ToString();
     }
+
+
+
 
 
     public void TotalScore()//スコア表示

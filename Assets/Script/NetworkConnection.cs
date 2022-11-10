@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.SceneManagement;
@@ -48,7 +47,7 @@ public class NetworkConnection : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinRandomRoom();
     }
 
-    public void CreateRoom(TMP_InputField inputField)//ルームを作成する
+    public void CreateRoom(InputField inputField)//ルームを作成する
     {
         string roomName = "";
         roomName = inputField.text;//入力されたルーム名を代入

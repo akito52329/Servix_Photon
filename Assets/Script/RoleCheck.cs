@@ -161,7 +161,7 @@ public class RoleCheck : MonoBehaviour
         nameEndObject[getCard.onClickCount] = end;
         myNumberObject[getCard.onClickCount] = num;
         nameObject[getCard.onClickCount] = name;
-        getCard.onClickCount += 1;
+        getCard.onClickCount ++;
     }
 
     public void RoleColor()//色役の計算

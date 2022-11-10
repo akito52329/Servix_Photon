@@ -1,62 +1,62 @@
-Ôªøusing System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class CardData : MonoBehaviour
 {
     [SerializeField]
-    Color[] colorCode = { Color.black, Color.white, Color.red, Color.blue, Color.green, Color.cyan, Color.magenta, Color.yellow, Color.clear };//„Ç´„É©„Éº„Ç≥„Éº„Éâ
+    Color[] colorCode = { Color.black, Color.white, Color.red, Color.blue, Color.green, Color.cyan, Color.magenta, Color.yellow, Color.clear };//ÉJÉâÅ[ÉRÅ[Éh
 
     [SerializeField]
-    int[] numericCode = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };//Êï∞Â≠ó„Ç≥„Éº„Éâ
+    int[] numericCode = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };//êîéöÉRÅ[Éh
 
     public Color CadeDetaColor(string name)
     {
         switch (name)
         {
-            case "„Åã„Çâ„Åô":
-            case "„Åî„Åæ":
-            case "„Åì„ÅÜ„Å≤„ÅÑ":
+            case "Ç©ÇÁÇ∑":
+            case "Ç≤Ç‹":
+            case "Ç±Ç§Ç–Ç¢":
                 return colorCode[0];
 
-            case "„Å´„Çè„Å®„Çä":
-            case "„ÇÑ„Åé":
-            case "„Åé„ÇÖ„ÅÜ„Å´„ÇÖ„ÅÜ":
+            case "Ç…ÇÌÇ∆ÇË":
+            case "Ç‚Ç¨":
+            case "Ç¨Ç„Ç§Ç…Ç„Ç§":
                 return colorCode[1];
 
-            case "„Çä„Çì„Åî":
-            case "„ÅÑ„Å°":
-            case "„Å®„Åæ„Å®":
-            case "„Å∞„Çâ":
-            case "„Åô„ÅÑ„Åã":
-            case "„Å≤":
-            case "„ÅÜ„ÇÅ„Åº„Åó":
+            case "ÇËÇÒÇ≤":
+            case "Ç¢Çø":
+            case "Ç∆Ç‹Ç∆":
+            case "ÇŒÇÁ":
+            case "Ç∑Ç¢Ç©":
+            case "Ç–":
+            case "Ç§ÇﬂÇ⁄Çµ":
                 return colorCode[2];
 
-            case "„Å´":
-            case "„Å™„Å™":
-            case "„ÅÑ„Çã„Åã":
-            case "„ÅÇ„Åò„Åï„ÅÑ":
+            case "Ç…":
+            case "Ç»Ç»":
+            case "Ç¢ÇÈÇ©":
+            case "Ç†Ç∂Ç≥Ç¢":
                 return colorCode[3];
 
-            case "„Çà„Çì":
-            case "„Åî":
-            case "„Åî„Éº„ÇÑ":
+            case "ÇÊÇÒ":
+            case "Ç≤":
+            case "Ç≤Å[Ç‚":
                 return colorCode[4];
 
-            case "„Çå„ÅÑ":
-            case "„Çç„Åè":
-            case "„Çâ„ÇÄ„Å≠":
+            case "ÇÍÇ¢":
+            case "ÇÎÇ≠":
+            case "ÇÁÇﬁÇÀ":
                 return colorCode[5];
 
-            case "„ÅØ„Å°":
-            case "„Åç„ÇÖ„ÅÜ":
-            case "„Å™„Åô":
+            case "ÇÕÇø":
+            case "Ç´Ç„Ç§":
+            case "Ç»Ç∑":
                 return colorCode[6];
 
-            case "„Åï„Çì":
-            case "„Åπ„Å´„Å∞„Å™":
-            case "„Å≤„Åæ„Çè„Çä":
+            case "Ç≥ÇÒ":
+            case "Ç◊Ç…ÇŒÇ»":
+            case "Ç–Ç‹ÇÌÇË":
                 return colorCode[7];
 
             default:
@@ -68,25 +68,25 @@ public class CardData : MonoBehaviour
     {
         switch (name)
         {
-            case "„Çå„ÅÑ":
+            case "ÇÍÇ¢":
                 return numericCode[0];
-            case "„ÅÑ„Å°":
+            case "Ç¢Çø":
                 return numericCode[1];
-            case "„Å´":
+            case "Ç…":
                 return numericCode[2];
-            case "„Åï„Çì":
+            case "Ç≥ÇÒ":
                 return numericCode[3];
-            case "„Çà„Çì":
+            case "ÇÊÇÒ":
                 return numericCode[4];
-            case "„Åî":
+            case "Ç≤":
                 return numericCode[5];
-            case "„Çç„Åè":
-                return numericCode[6];         
-            case "„Å™„Å™":
+            case "ÇÎÇ≠":
+                return numericCode[6];
+            case "Ç»Ç»":
                 return numericCode[7];
-            case "„ÅØ„Å°":
+            case "ÇÕÇø":
                 return numericCode[8];
-            case "„Åç„ÇÖ„ÅÜ":
+            case "Ç´Ç„Ç§":
                 return numericCode[9];
             default:
                 return numericCode[10];

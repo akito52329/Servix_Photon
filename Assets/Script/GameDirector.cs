@@ -10,7 +10,7 @@ using DG.Tweening;
 
 public class GameDirector : MonoBehaviourPunCallbacks
 {
-    public enum GameState {Standby,Leave, Round, InGame, Score, Set, Wait, Finish}
+    public enum GameState { Standby, Leave, Round, InGame, Score, Set, Wait, Finish }
 
     [SerializeField] CardGeneration cardGeneration;
     [SerializeField] TextMove textMove;
@@ -19,17 +19,15 @@ public class GameDirector : MonoBehaviourPunCallbacks
     [SerializeField] RoleCheck roleCheck;
     [SerializeField] GetCard getCard;
     [SerializeField] ScoreText scoreTextCo;
+    [SerializeField] Timer timer;
 
     [SerializeField] GameObject leavePanel;
     [SerializeField] GameObject waitPanel;
-    [SerializeField] Button[] buttons;//ボタン取得
+    [SerializeField] GameObject bottonsParent;
 
-    [SerializeField] TextMeshProUGUI timerText;
-    [SerializeField] private float maxTime = 300;//時間の最大時間
-    [SerializeField] private float minTime = 0;
     private int maxRound = 10;
+    bool precedence = false;
 
-    private bool countTime = false;//制限時間
     private bool final = false;//終わったか
     private bool yourFinal = false;//相手が終わったか
     private bool first = false;//先に終了したか
@@ -70,9 +68,10 @@ public class GameDirector : MonoBehaviourPunCallbacks
             PhotonNetwork.IsMessageQueueRunning = true;
         }
 
+        precedence = PhotonNetwork.IsMasterClient;
+
         loadState = GameState.Round;
         maxRound = textMove.GetRound();
-        cardGeneration.Shuffle();
     }
 
     void Update()
@@ -82,18 +81,7 @@ public class GameDirector : MonoBehaviourPunCallbacks
             loadState = GameState.Finish;
         }
 
-        if (countTime)
-        {
-            if (maxTime > minTime)
-            {
-                maxTime -= Time.deltaTime;
-                timerText.text = maxTime.ToString("f0");
-            }
-            else
-            {
-               loadState = GameState.Wait;
-            }
-        }
+        Debug.Log(precedence);
     }
 
     void OnGameState()//ゲームのステート
@@ -104,7 +92,7 @@ public class GameDirector : MonoBehaviourPunCallbacks
                 break;
             case GameState.Leave:
                 leavePanel.SetActive(true);
-                countTime = false;
+                timer.ChengeCountTime(false);
                 PhotonNetwork.LeaveRoom();
                 break;
             case GameState.Round:
@@ -115,7 +103,35 @@ public class GameDirector : MonoBehaviourPunCallbacks
                     finalScoreText.gameObject.SetActive(false);
                     RoleReset();
                     textMove.TextMoving();
+
+                    //  if ((float)textMove.round / 2 == textMove.round / 2)//偶数
+                    ChengeInteractable(!precedence);
+                    /*
+                    if (precedence)
+                    {
+                        if(PhotonNetwork.IsMasterClient)
+                        {
+                            ChengeInteractable(false);
+                        }
+                        else
+                        {
+                            ChengeInteractable(true);
+                        }
+
+                    }
+                    else
+                    {
+                        if (PhotonNetwork.IsMasterClient)
+                        {
+                            ChengeInteractable(true);
+                        }
+                        else
+                        {
+                            ChengeInteractable(false);
+                        }
+                    }*/
                     getCard.onClickCount = 0;
+
                 }
                 else
                 {
@@ -123,20 +139,27 @@ public class GameDirector : MonoBehaviourPunCallbacks
                 }
                 break;
             case GameState.InGame:
-                countTime = true;
+                timer.ChengeCountTime(true);
                 textMove.gameObject.SetActive(false);
                 Operation();
                 CardGeneration();
+
+
                 break;
             case GameState.Score:
-                countTime = false;
+                timer.ChengeCountTime(false);
                 scorePanel.gameObject.SetActive(true);
                 scoreTextCo.RoleScore();
                 scorePanel.ScaleUp();
-                if((float)textMove.round / 2 == textMove.round / 2)//偶数
-                {
-                    photonView.RPC("YourScore", RpcTarget.Others, scoreTextCo.totalScore);
-                }
+
+                /*      if((float)textMove.round / 2 == textMove.round / 2)//偶数
+                      {
+                          photonView.RPC("YourScore", RpcTarget.Others, scoreTextCo.totalScore);
+                      }*/
+
+                photonView.RPC(nameof(YourScore), RpcTarget.Others, scoreTextCo.totalScore);
+                
+                photonView.RPC(nameof(GiveRound), RpcTarget.Others, textMove.round + 1);
                 textMove.round++;
                 break;
             case GameState.Wait:
@@ -145,8 +168,8 @@ public class GameDirector : MonoBehaviourPunCallbacks
                 {
                     waitPanel.SetActive(true);
                     first = true;                    
-                    photonView.RPC("FinalCheck", RpcTarget.Others, final);
-                    photonView.RPC("YourScore", RpcTarget.Others, scoreTextCo.totalScore);
+                    photonView.RPC(nameof(FinalCheck), RpcTarget.Others, final);
+                    photonView.RPC(nameof(YourScore), RpcTarget.Others, scoreTextCo.totalScore);
                     if (!PhotonNetwork.InRoom)
                     {
                         yourFinal = true;
@@ -155,12 +178,12 @@ public class GameDirector : MonoBehaviourPunCallbacks
                 else//最後に終了
                 {
                     first = false;
-                    photonView.RPC("FinalCheck", RpcTarget.Others, final);
+                    photonView.RPC(nameof(FinalCheck), RpcTarget.Others, final);
                 }
                 break;
             case GameState.Finish:
                 waitPanel.SetActive(false);
-                photonView.RPC("YourTotalScore", RpcTarget.Others, finalScoreText.FinalScore(scoreTextCo.totalScore, maxTime, first));
+                photonView.RPC(nameof(YourTotalScore), RpcTarget.Others, finalScoreText.FinalScore(scoreTextCo.totalScore, timer.SetTime(), first));
                 finalScoreText.gameObject.SetActive(true);
                 break;
         }
@@ -185,35 +208,41 @@ public class GameDirector : MonoBehaviourPunCallbacks
 
     void Operation()//表示非表示
     {
-        if (textMove.round <= maxRound)
-        {
-            ButtonTrue();
-        }
-        else
-        {           
-            ButtonFalse();
-        }
+        ChengeInteractable(textMove.round <= maxRound);
     }
 
     void CardGeneration()//カード生成
     {
-        cardGeneration.Generation(textMove.round == 1);
-        cardGeneration.CardChenge();
-    }
-
-    void ButtonTrue()//ボタンを押せるようにする
-    {
-        for(int b = 0; b <= buttons.Length - 1; b++)
+        if(precedence)
         {
-            buttons[b].interactable = true;
+
+            cardGeneration.Generation(textMove.round == 1);
+            cardGeneration.CardChenge();
         }
+        /*
+        if (PhotonNetwork.IsMasterClient)
+        { 
+          //  cardGeneration.CardChenge();
+            cardGeneration.Generation(textMove.round == 1);
+        }
+        else
+        {
+            Debug.Log(4444444444444);
+            if(textMove.round != 1)
+            {
+                photonView.RPC(nameof(GiveState), RpcTarget.OthersBuffered, GameState.Round);
+
+            }
+
+        }*/
+
     }
 
-    void ButtonFalse()//ボタンを押せなくする
+    void ChengeInteractable(bool checke)//ボタンを押せるようにする
     {
-        for (int b = 0; b <= buttons.Length - 1; b++)
+        foreach(Button b in bottonsParent.GetComponentsInChildren<Button>())
         {
-            buttons[b].interactable = false;
+            b.interactable = checke;
         }
     }
 
@@ -248,5 +277,25 @@ public class GameDirector : MonoBehaviourPunCallbacks
     public void FinalCheck(bool f)//自分が先に終わったことを伝える
     {
         yourFinal = f;
+    }
+
+    [PunRPC]
+    public void GiveClickObjects(GameObject[] objects)
+    {
+        cardGeneration.clickObject = objects;
+        CardGeneration();
+    }
+
+    [PunRPC]
+    public void GiveRound(int r)
+    {
+        textMove.round = r;
+    }
+
+
+    [PunRPC]
+    public void GiveState(GameState state)
+    {
+        loadState = state;
     }
 }

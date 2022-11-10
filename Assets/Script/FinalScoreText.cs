@@ -9,10 +9,10 @@ public class FinalScoreText : MonoBehaviour
 {
     [SerializeField] ScoreText scoreText;
     [SerializeField] AudioController audio;
-    [SerializeField] TextMeshProUGUI myTotalScoreText;//自分のスコア
-    [SerializeField] TextMeshProUGUI yourTotalScoreText;//相手ののスコア
-    [SerializeField] TextMeshProUGUI resultText;//勝敗
-    [SerializeField] TextMeshProUGUI detailText;//スコアの詳細
+    [SerializeField] Text myTotalScoreText;//自分のスコア
+    [SerializeField] Text yourTotalScoreText;//相手ののスコア
+    [SerializeField] Text resultText;//勝敗
+    [SerializeField] Text detailText;//スコアの詳細
 
     [SerializeField] Color winColor;//勝敗
     [SerializeField] Color loseColor;//敗北

@@ -43,6 +43,10 @@ MonoBehaviour:
   - FinalCheck
   - YourTotalScore
   - YourScore
+  - GiveClickObjects
+  - GiveRound
+  - GiveState
+  - GiveDeck
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0
