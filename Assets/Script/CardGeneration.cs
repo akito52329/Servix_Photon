@@ -10,7 +10,7 @@ public class CardGeneration : MonoBehaviourPunCallbacks
 {
     [SerializeField] GetCard getCard;
     [SerializeField] Data data;
-
+    [SerializeField] TextMove textMove;
     [SerializeField] GameObject parent;//生成するオブジェクトの親
     [SerializeField] List<ObjectData> objectDatas = new List<ObjectData>();
     [SerializeField] List<int> decks = new List<int>();
@@ -20,6 +20,22 @@ public class CardGeneration : MonoBehaviourPunCallbacks
     public GameObject[] clickObject = new GameObject[6];
     [SerializeField] GameObject numInitialPos;//ナンバーの位置
     [SerializeField] GameObject cardInitialPos;//初期位置
+    private List<GameObject> _disPlayObject = new List<GameObject>();
+
+
+    private List<GameObject> _genPlayObjects = new List<GameObject>();
+    public List<GameObject> genPlayObject
+    {
+        get { return _genPlayObjects; }
+        set
+        {
+            _genPlayObjects = value;
+
+            Generation(textMove.round == 1);
+        }
+    }
+
+
 
     private void Awake()
     {
@@ -30,7 +46,8 @@ public class CardGeneration : MonoBehaviourPunCallbacks
                 decks.Add(i);
             }
         }
-       // Shuffle();
+        // Shuffle();
+
     }
 
     private void Start()
@@ -39,7 +56,7 @@ public class CardGeneration : MonoBehaviourPunCallbacks
         {
             // 実際の処理
             Shuffle();
-            photonView.RPC(nameof(GiveDeck), RpcTarget.OthersBuffered, decks);
+
         }
 
         
@@ -50,7 +67,7 @@ public class CardGeneration : MonoBehaviourPunCallbacks
     {
         Debug.Log("来ちゃー");
         if (first)//Round１の場合
-        {　
+        {
             var genePosCount = 0;
             genePosCount = genePos.Count;
             for (int card = 0; card < genePosCount; card++)
@@ -65,25 +82,29 @@ public class CardGeneration : MonoBehaviourPunCallbacks
         }
         else
         {
-            
-            CardChenge();
-            var clickObjeCount = clickObject.Length;
 
-            for (int card = 0; card <= clickObjeCount - 1; card++)
+            // CardChenge();
+            var clickObjeCount = genPlayObject.Count;
+
+            for (int card = 0; card < clickObjeCount; card++)
             {
                 string name = data.data[decks.First()].Name;
-                GameObject geneCard = PhotonNetwork.Instantiate(name, clickObject[card].transform.position, Quaternion.identity);
+                GameObject geneCard = PhotonNetwork.Instantiate(name, genPlayObject[card].transform.position, Quaternion.identity);
                 geneCard.transform.parent = parent.transform;
                 decks.RemoveAt(0);//生成したカードを除外する
             }
         }
-        photonView.RPC(nameof(GiveDeck), RpcTarget.OthersBuffered, decks);
+        photonView.RPC(nameof(GiveDeck), RpcTarget.Others, decks.ToArray());
+
+
+
     }
 
 
     public void Shuffle() // デッキをシャッフルする
     {
         decks = decks.OrderBy(shuffle => Guid.NewGuid()).ToList();
+        photonView.RPC(nameof(GiveDeck), RpcTarget.Others, decks);
     }
 
 
@@ -99,8 +120,11 @@ public class CardGeneration : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    public void GiveDeck(List<int> list)//相手側に自分の最終スコアを渡す
+    public void GiveDeck(int[] list)
     {
-        decks = list;
+        decks = list.ToList();
     }
+
+
+
 }

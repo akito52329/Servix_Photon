@@ -8279,6 +8279,7 @@ GameObject:
   - component: {fileID: 1155202935}
   - component: {fileID: 1155202934}
   - component: {fileID: 1155202936}
+  - component: {fileID: 1155202937}
   m_Layer: 0
   m_Name: CardGeneration
   m_TagString: Untagged
@@ -8331,7 +8332,7 @@ MonoBehaviour:
   - {fileID: 8402909255451230293, guid: 580b206854faf73479ec5507e5a93cee, type: 3}
   - {fileID: 5823065620414600520, guid: bc4aeed667601b04c8505328a7976b15, type: 3}
   - {fileID: 991904787522575139, guid: 7244a7c0b649bc1408039dfc076e1e34, type: 3}
-  decks: 
+  decks: 00000000
   genePos:
   - {fileID: 1337908648}
   - {fileID: 722740765}
@@ -8385,10 +8386,27 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 1155202937}
   sceneViewId: 31
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &1155202937
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1155202933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
 --- !u!1 &1159435017
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using TMPro;
+using System.Linq;
 using Photon.Pun;
 using Photon.Realtime;
 using DG.Tweening;
@@ -130,6 +131,8 @@ public class GameDirector : MonoBehaviourPunCallbacks
                             ChengeInteractable(false);
                         }
                     }*/
+    
+
                     getCard.onClickCount = 0;
 
                 }
@@ -156,6 +159,8 @@ public class GameDirector : MonoBehaviourPunCallbacks
                       {
                           photonView.RPC("YourScore", RpcTarget.Others, scoreTextCo.totalScore);
                       }*/
+                
+
 
                 photonView.RPC(nameof(YourScore), RpcTarget.Others, scoreTextCo.totalScore);
                 
@@ -215,28 +220,29 @@ public class GameDirector : MonoBehaviourPunCallbacks
     {
         if(precedence)
         {
-
-            cardGeneration.Generation(textMove.round == 1);
-            cardGeneration.CardChenge();
-        }
-
-        precedence = !precedence;
-        /*
-        if (PhotonNetwork.IsMasterClient)
-        { 
-          //  cardGeneration.CardChenge();
-            cardGeneration.Generation(textMove.round == 1);
+            /*  if (PhotonNetwork.IsMasterClient)
+        {
+            cardGeneration.genPlayObject = cardGeneration.clickObject.ToList();
         }
         else
         {
-            Debug.Log(4444444444444);
-            if(textMove.round != 1)
-            {
-                photonView.RPC(nameof(GiveState), RpcTarget.OthersBuffered, GameState.Round);
-
-            }
-
+            photonView.RPC(nameof(GiveDisplay), RpcTarget.Others, cardGeneration.clickObject.ToArray());
         }*/
+            
+           // cardGeneration.CardChenge();
+        }
+     
+
+        precedence = !precedence;
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            cardGeneration.genPlayObject = cardGeneration.clickObject.ToList();
+        }
+        else
+        {
+            photonView.RPC(nameof(GiveDisplay), RpcTarget.Others, cardGeneration.clickObject.ToArray());
+        }
 
     }
 
@@ -300,5 +306,11 @@ public class GameDirector : MonoBehaviourPunCallbacks
     public void GiveState(GameState state)
     {
         loadState = state;
+    }
+
+    [PunRPC]
+    public void GiveDisplay(GameObject[] list)//相手側に自分の最終スコアを渡す
+    {
+       cardGeneration.genPlayObject = list.ToList();
     }
 }
