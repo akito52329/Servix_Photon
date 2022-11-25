@@ -8,6 +8,7 @@ using System.Linq;
 
 public class CardGeneration : MonoBehaviourPunCallbacks
 {
+    [SerializeField] GameDirector gameDirector;
     [SerializeField] GetCard getCard;
     [SerializeField] Data data;
     [SerializeField] TextMove textMove;
@@ -23,15 +24,15 @@ public class CardGeneration : MonoBehaviourPunCallbacks
     private List<GameObject> _disPlayObject = new List<GameObject>();
 
 
-    private List<GameObject> _genPlayObjects = new List<GameObject>();
+    public List<GameObject> _genPlayObjects = new List<GameObject>();
     public List<GameObject> genPlayObject
     {
         get { return _genPlayObjects; }
         set
         {
             _genPlayObjects = value;
-
-            Generation(textMove.round == 1);
+            Debug.Log(23445667);
+            Generation(false);
         }
     }
 
@@ -79,6 +80,8 @@ public class CardGeneration : MonoBehaviourPunCallbacks
                 geneCard.transform.parent = parent.transform;
                 decks.RemoveAt(0);//生成したカードを除外する
             }
+         /*   gameDirector.chenge = true;
+            photonView.RPC(nameof(GiveChenge), RpcTarget.Others, gameDirector.chenge);*/
         }
         else
         {
@@ -93,8 +96,9 @@ public class CardGeneration : MonoBehaviourPunCallbacks
                 geneCard.transform.parent = parent.transform;
                 decks.RemoveAt(0);//生成したカードを除外する
             }
+            CardChenge();
         }
-        photonView.RPC(nameof(GiveDeck), RpcTarget.Others, decks.ToArray());
+       // photonView.RPC(nameof(GiveDeck), RpcTarget.Others, decks.ToArray());
 
 
 
@@ -110,13 +114,16 @@ public class CardGeneration : MonoBehaviourPunCallbacks
 
     public void CardChenge()
     {
-
-        for(int card = 0; card < clickObject.Length; card++)//クリックした分だけチェンジ
+        Debug.Log("fhfhfgjhgfj");
+        for(int card = 0; card < genPlayObject.Count; card++)//クリックした分だけチェンジ
         {
-            PhotonNetwork.Destroy(clickObject[card].gameObject);
+            PhotonNetwork.Destroy(genPlayObject[card].gameObject);
            // clickObject[card].transform.position = cardInitialPos.transform.position;
             getCard.numberUi[card].transform.position = numInitialPos.transform.position;
         }
+
+     /*   gameDirector.chenge = true;
+        photonView.RPC(nameof(GiveChenge), RpcTarget.Others, gameDirector.chenge);*/
     }
 
     [PunRPC]
@@ -125,6 +132,10 @@ public class CardGeneration : MonoBehaviourPunCallbacks
         decks = list.ToList();
     }
 
-
+    [PunRPC]
+    public void GiveChenge(bool b)
+    {
+        gameDirector.chenge = b;
+    }
 
 }

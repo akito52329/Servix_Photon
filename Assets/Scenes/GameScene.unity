@@ -8299,8 +8299,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e1d5dd9d23e6a64d8291126b1884bea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameDirector: {fileID: 178641864}
   getCard: {fileID: 705992376}
   data: {fileID: 11400000, guid: 246f2185857060f4683996f1f403a49a, type: 2}
+  textMove: {fileID: 560398664}
   parent: {fileID: 1162853836}
   objectDatas:
   - {fileID: 7873454018892180381, guid: 834ffa18dc1968b47bd910fb853d0561, type: 3}
@@ -8354,6 +8356,7 @@ MonoBehaviour:
   - {fileID: 0}
   numInitialPos: {fileID: 610530030}
   cardInitialPos: {fileID: 38440720}
+  _genPlayObjects: []
 --- !u!4 &1155202935
 Transform:
   m_ObjectHideFlags: 0

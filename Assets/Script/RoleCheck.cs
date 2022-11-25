@@ -118,8 +118,6 @@ public class RoleCheck : MonoBehaviour
                 threeKind += roleMax;
                 _objectCount = 0;
             }
-            Debug.Log(threeKind);
-            Debug.Log(_objectCount);
         }
     }
 

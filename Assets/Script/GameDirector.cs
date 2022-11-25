@@ -34,6 +34,17 @@ public class GameDirector : MonoBehaviourPunCallbacks
     private bool first = false;//先に終了したか
     public static bool online = true;
 
+    private bool _chenge = false;
+    public bool chenge
+    {
+        get { return _chenge; }
+        set
+        {
+            _chenge = value;
+           // ChengeInteractable(textMove.round == 1);
+        }
+    }
+
     private GameState _loadState = GameState.Standby;
     static public GameState loadState//ゲームステート
     {
@@ -69,7 +80,7 @@ public class GameDirector : MonoBehaviourPunCallbacks
             PhotonNetwork.IsMessageQueueRunning = true;
         }
 
-        precedence = PhotonNetwork.IsMasterClient;
+        //precedence = PhotonNetwork.IsMasterClient;
 
         loadState = GameState.Round;
         maxRound = textMove.GetRound();
@@ -82,7 +93,6 @@ public class GameDirector : MonoBehaviourPunCallbacks
             loadState = GameState.Finish;
         }
 
-        Debug.Log(precedence);
     }
 
     void OnGameState()//ゲームのステート
@@ -105,33 +115,7 @@ public class GameDirector : MonoBehaviourPunCallbacks
                     RoleReset();
                     textMove.TextMoving();
 
-                    //  if ((float)textMove.round / 2 == textMove.round / 2)//偶数
-                    ChengeInteractable(!precedence);
-                    /*
-                    if (precedence)
-                    {
-                        if(PhotonNetwork.IsMasterClient)
-                        {
-                            ChengeInteractable(false);
-                        }
-                        else
-                        {
-                            ChengeInteractable(true);
-                        }
 
-                    }
-                    else
-                    {
-                        if (PhotonNetwork.IsMasterClient)
-                        {
-                            ChengeInteractable(true);
-                        }
-                        else
-                        {
-                            ChengeInteractable(false);
-                        }
-                    }*/
-    
 
                     getCard.onClickCount = 0;
 
@@ -144,8 +128,19 @@ public class GameDirector : MonoBehaviourPunCallbacks
             case GameState.InGame:
                 timer.ChengeCountTime(true);
                 textMove.gameObject.SetActive(false);
-                Operation();
                 CardGeneration();
+                //  Operation();
+
+
+                if (PhotonNetwork.IsMasterClient)
+                {
+                    ChengeInteractable(((float)textMove.round / 2 != textMove.round / 2));
+                }
+                else
+                {
+                    ChengeInteractable(((float)textMove.round / 2 == textMove.round / 2));
+                }
+
 
 
                 break;
@@ -159,7 +154,8 @@ public class GameDirector : MonoBehaviourPunCallbacks
                       {
                           photonView.RPC("YourScore", RpcTarget.Others, scoreTextCo.totalScore);
                       }*/
-                
+
+
 
 
                 photonView.RPC(nameof(YourScore), RpcTarget.Others, scoreTextCo.totalScore);
@@ -211,48 +207,38 @@ public class GameDirector : MonoBehaviourPunCallbacks
         SceneManager.LoadScene("TitleScene");
     }
 
-    void Operation()//表示非表示
-    {
-        ChengeInteractable(textMove.round <= maxRound);
-    }
 
     void CardGeneration()//カード生成
     {
-        if(precedence)
+        if (textMove.round == 1)
         {
-            /*  if (PhotonNetwork.IsMasterClient)
-        {
-            cardGeneration.genPlayObject = cardGeneration.clickObject.ToList();
+            if (PhotonNetwork.IsMasterClient)
+            {
+                cardGeneration.Generation(true);
+            }
         }
         else
         {
-            photonView.RPC(nameof(GiveDisplay), RpcTarget.Others, cardGeneration.clickObject.ToArray());
-        }*/
-            
-           // cardGeneration.CardChenge();
-        }
-     
+            if (PhotonNetwork.IsMasterClient)
+            {
+                cardGeneration.genPlayObject = cardGeneration.clickObject.ToList();
 
-        precedence = !precedence;
-
-        if (PhotonNetwork.IsMasterClient)
-        {
-            cardGeneration.genPlayObject = cardGeneration.clickObject.ToList();
+            }
+            else
+            {
+                photonView.RPC(nameof(GiveDisplay), RpcTarget.Others, cardGeneration.clickObject.ToArray());
+            }
         }
-        else
-        {
-            photonView.RPC(nameof(GiveDisplay), RpcTarget.Others, cardGeneration.clickObject.ToArray());
-        }
-
     }
 
-    void ChengeInteractable(bool checke)//ボタンを押せるようにする
+    public void ChengeInteractable(bool checke = false)//ボタンを押せるようにする
     {
-        foreach(Button b in bottonsParent.GetComponentsInChildren<Button>())
+        foreach (Button b in bottonsParent.GetComponentsInChildren<Button>())
         {
             Debug.Log("66");
             b.interactable = checke;
         }
+
     }
 
     void RoleReset()//役リセット
@@ -299,6 +285,7 @@ public class GameDirector : MonoBehaviourPunCallbacks
     public void GiveRound(int r)
     {
         textMove.round = r;
+        loadState = GameState.Round;
     }
 
 
