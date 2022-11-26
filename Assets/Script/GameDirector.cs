@@ -48,6 +48,7 @@ public class GameDirector : MonoBehaviourPunCallbacks
     private GameState _loadState = GameState.Standby;
     static public GameState loadState//ゲームステート
     {
+        get { return gameDire._loadState; }
         set
         {
             if (gameDire._loadState != value)
@@ -80,7 +81,7 @@ public class GameDirector : MonoBehaviourPunCallbacks
             PhotonNetwork.IsMessageQueueRunning = true;
         }
 
-        //precedence = PhotonNetwork.IsMasterClient;
+        precedence = PhotonNetwork.IsMasterClient;
 
         loadState = GameState.Round;
         maxRound = textMove.GetRound();
@@ -114,9 +115,6 @@ public class GameDirector : MonoBehaviourPunCallbacks
                     finalScoreText.gameObject.SetActive(false);
                     RoleReset();
                     textMove.TextMoving();
-
-
-
                     getCard.onClickCount = 0;
 
                 }
@@ -124,25 +122,16 @@ public class GameDirector : MonoBehaviourPunCallbacks
                 {
                     loadState = GameState.Wait;
                 }
+
+                photonView.RPC(nameof(GiveRound), RpcTarget.Others, textMove.round);
+                CardGeneration();
                 break;
             case GameState.InGame:
                 timer.ChengeCountTime(true);
                 textMove.gameObject.SetActive(false);
-                CardGeneration();
+
                 //  Operation();
-
-
-                if (PhotonNetwork.IsMasterClient)
-                {
-                    ChengeInteractable(((float)textMove.round / 2 != textMove.round / 2));
-                }
-                else
-                {
-                    ChengeInteractable(((float)textMove.round / 2 == textMove.round / 2));
-                }
-
-
-
+                precedence = !precedence;
                 break;
             case GameState.Score:
                 timer.ChengeCountTime(false);
@@ -154,14 +143,10 @@ public class GameDirector : MonoBehaviourPunCallbacks
                       {
                           photonView.RPC("YourScore", RpcTarget.Others, scoreTextCo.totalScore);
                       }*/
-
-
-
-
                 photonView.RPC(nameof(YourScore), RpcTarget.Others, scoreTextCo.totalScore);
-                
-                photonView.RPC(nameof(GiveRound), RpcTarget.Others, textMove.round + 1);
                 textMove.round++;
+
+
                 break;
             case GameState.Wait:
                 final = true;
@@ -221,22 +206,27 @@ public class GameDirector : MonoBehaviourPunCallbacks
         {
             if (PhotonNetwork.IsMasterClient)
             {
-                cardGeneration.genPlayObject = cardGeneration.clickObject.ToList();
 
+                cardGeneration.Generation(false);
             }
             else
             {
-                photonView.RPC(nameof(GiveDisplay), RpcTarget.Others, cardGeneration.clickObject.ToArray());
+                Debug.Log("popopop");
+                photonView.RPC(nameof(GiveDisplay), RpcTarget.MasterClient, cardGeneration.clickObject);
             }
         }
     }
 
-    public void ChengeInteractable(bool checke = false)//ボタンを押せるようにする
+    public void ChengeInteractable()//ボタンを押せるようにする
     {
+        Debug.Log(10000000);
+       /*bool checke = 
+            PhotonNetwork.IsMasterClient ? 
+            (float)textMove.round / 2 != textMove.round / 2 
+            : (float)textMove.round / 2 == textMove.round / 2;*/
         foreach (Button b in bottonsParent.GetComponentsInChildren<Button>())
         {
-            Debug.Log("66");
-            b.interactable = checke;
+            b.interactable = precedence;
         }
 
     }
@@ -275,13 +265,6 @@ public class GameDirector : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    public void GiveClickObjects(GameObject[] objects)
-    {
-        cardGeneration.clickObject = objects;
-        CardGeneration();
-    }
-
-    [PunRPC]
     public void GiveRound(int r)
     {
         textMove.round = r;
@@ -298,6 +281,7 @@ public class GameDirector : MonoBehaviourPunCallbacks
     [PunRPC]
     public void GiveDisplay(GameObject[] list)//相手側に自分の最終スコアを渡す
     {
-       cardGeneration.genPlayObject = list.ToList();
+       cardGeneration.clickObject = list;
+       cardGeneration.Generation(false);
     }
 }

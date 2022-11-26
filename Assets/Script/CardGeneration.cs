@@ -12,6 +12,7 @@ public class CardGeneration : MonoBehaviourPunCallbacks
     [SerializeField] GetCard getCard;
     [SerializeField] Data data;
     [SerializeField] TextMove textMove;
+    [SerializeField] GeneratReply generatReply;//生成するオブジェクトの親
     [SerializeField] GameObject parent;//生成するオブジェクトの親
     [SerializeField] List<ObjectData> objectDatas = new List<ObjectData>();
     [SerializeField] List<int> decks = new List<int>();
@@ -21,20 +22,6 @@ public class CardGeneration : MonoBehaviourPunCallbacks
     public GameObject[] clickObject = new GameObject[6];
     [SerializeField] GameObject numInitialPos;//ナンバーの位置
     [SerializeField] GameObject cardInitialPos;//初期位置
-    private List<GameObject> _disPlayObject = new List<GameObject>();
-
-
-    public List<GameObject> _genPlayObjects = new List<GameObject>();
-    public List<GameObject> genPlayObject
-    {
-        get { return _genPlayObjects; }
-        set
-        {
-            _genPlayObjects = value;
-            Debug.Log(23445667);
-            Generation(false);
-        }
-    }
 
 
 
@@ -75,9 +62,7 @@ public class CardGeneration : MonoBehaviourPunCallbacks
             {
                 objectDatas.First().transform.position = genePos[card].transform.position;//10か所に生成
                 string name = data.data[decks.First()].Name;
-                Debug.Log(name);
-                GameObject geneCard = PhotonNetwork.Instantiate(name, genePos[card].transform.position, Quaternion.identity);
-                geneCard.transform.parent = parent.transform;
+                generatReply.GeneratCards(name, genePos[card].transform, true);
                 decks.RemoveAt(0);//生成したカードを除外する
             }
          /*   gameDirector.chenge = true;
@@ -87,13 +72,12 @@ public class CardGeneration : MonoBehaviourPunCallbacks
         {
 
             // CardChenge();
-            var clickObjeCount = genPlayObject.Count;
+            var clickObjeCount = clickObject.Length;
 
             for (int card = 0; card < clickObjeCount; card++)
             {
                 string name = data.data[decks.First()].Name;
-                GameObject geneCard = PhotonNetwork.Instantiate(name, genPlayObject[card].transform.position, Quaternion.identity);
-                geneCard.transform.parent = parent.transform;
+                generatReply.GeneratCards(name, clickObject[card].transform, false);
                 decks.RemoveAt(0);//生成したカードを除外する
             }
             CardChenge();
@@ -114,14 +98,13 @@ public class CardGeneration : MonoBehaviourPunCallbacks
 
     public void CardChenge()
     {
-        Debug.Log("fhfhfgjhgfj");
-        for(int card = 0; card < genPlayObject.Count; card++)//クリックした分だけチェンジ
+        for(int card = 0; card < clickObject.Length; card++)//クリックした分だけチェンジ
         {
-            PhotonNetwork.Destroy(genPlayObject[card].gameObject);
+            PhotonNetwork.Destroy(clickObject[card].gameObject);
            // clickObject[card].transform.position = cardInitialPos.transform.position;
             getCard.numberUi[card].transform.position = numInitialPos.transform.position;
         }
-
+        
      /*   gameDirector.chenge = true;
         photonView.RPC(nameof(GiveChenge), RpcTarget.Others, gameDirector.chenge);*/
     }
@@ -130,12 +113,6 @@ public class CardGeneration : MonoBehaviourPunCallbacks
     public void GiveDeck(int[] list)
     {
         decks = list.ToList();
-    }
-
-    [PunRPC]
-    public void GiveChenge(bool b)
-    {
-        gameDirector.chenge = b;
     }
 
 }

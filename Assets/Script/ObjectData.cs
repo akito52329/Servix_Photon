@@ -99,7 +99,6 @@ public class ObjectData : MonoBehaviour
 
     private void ClickCard(GameObject card)//ボタンが押されたときに
     {
-        Debug.Log(987565);
         audio.ClickAudio();
         myButton.interactable = false;
 
