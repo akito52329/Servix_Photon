@@ -113,7 +113,7 @@ public class GameDirector : MonoBehaviourPunCallbacks
                     textMove.gameObject.SetActive(true);
                     scorePanel.gameObject.SetActive(false);
                     finalScoreText.gameObject.SetActive(false);
-                    RoleReset();
+                    roleCheck.RoleReset();
                     textMove.TextMoving();
                     getCard.onClickCount = 0;
 
@@ -124,7 +124,33 @@ public class GameDirector : MonoBehaviourPunCallbacks
                 }
 
                 photonView.RPC(nameof(GiveRound), RpcTarget.Others, textMove.round);
-                CardGeneration();
+
+                if (textMove.round == 1)
+                {
+                    if (PhotonNetwork.IsMasterClient)
+                    {
+                        cardGeneration.FastGeneration();
+                    }
+                }
+                else
+                {
+                    if (PhotonNetwork.IsMasterClient)
+                    {
+
+                        if (!precedence)
+                        {
+                            CardGeneration();
+                        }
+                    }
+                    else
+                    {
+                        CardGeneration();
+                    }
+
+                }
+
+
+
                 break;
             case GameState.InGame:
                 timer.ChengeCountTime(true);
@@ -195,26 +221,18 @@ public class GameDirector : MonoBehaviourPunCallbacks
 
     void CardGeneration()//カード生成
     {
-        if (textMove.round == 1)
+
+        if (PhotonNetwork.IsMasterClient)
         {
-            if (PhotonNetwork.IsMasterClient)
-            {
-                cardGeneration.Generation(true);
-            }
+            cardGeneration.Generation(true);
         }
         else
         {
-            if (PhotonNetwork.IsMasterClient)
-            {
 
-                cardGeneration.Generation(false);
-            }
-            else
-            {
-                Debug.Log("popopop");
-                photonView.RPC(nameof(GiveDisplay), RpcTarget.MasterClient, cardGeneration.clickObject);
-            }
+            Debug.Log("popopop");
+            photonView.RPC(nameof(GiveDisplay), RpcTarget.MasterClient, cardGeneration.clickObject);
         }
+
     }
 
     public void ChengeInteractable()//ボタンを押せるようにする
@@ -231,19 +249,7 @@ public class GameDirector : MonoBehaviourPunCallbacks
 
     }
 
-    void RoleReset()//役リセット
-    {
-        roleCheck.stepCount = 0;
-        roleCheck.stepLuckyCount = 0;
-        roleCheck.dayCount = 0;
-        roleCheck.shiritoriCount = 0;
-        roleCheck.threeKind = 0;
-        roleCheck.colorRole = 0;
-        roleCheck.twoLuckyKind = 0;
-        roleCheck.twoKind = 0;
-        roleCheck.toiCount = 0;
-        roleCheck.colorCount = 0;
-    }
+
 
     [PunRPC]
     public void YourTotalScore(int s)//相手側に自分の最終スコアを渡す
@@ -281,7 +287,7 @@ public class GameDirector : MonoBehaviourPunCallbacks
     [PunRPC]
     public void GiveDisplay(GameObject[] list)//相手側に自分の最終スコアを渡す
     {
-       cardGeneration.clickObject = list;
-       cardGeneration.Generation(false);
+       cardGeneration.yourClickObject = list;
+        cardGeneration.Generation(false);
     }
 }

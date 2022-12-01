@@ -12,7 +12,7 @@ public class RoleCheck : MonoBehaviour
     public char[] nameTopObject = new char[6];
     public char[] nameEndObject = new char[6];
     public int[] myNumberObject = new int[6];
-
+    [SerializeField] private int scoreStandard = 100;//スコア１つ当たりの倍率
     private int oneCount = 1;//増加量
 
     //色役
@@ -68,12 +68,12 @@ public class RoleCheck : MonoBehaviour
 
     //ラッキー役(日付)
     private DateTime nowDay;
-    public int dayCount = 0;
+    private int dayCount = 0;
 
     //同種役
-    public int twoKind = 0;
-    public int twoLuckyKind = 0;
-    public int threeKind = 0;
+    private int twoKind = 0;
+    private int twoLuckyKind = 0;
+    private int threeKind = 0;
 
     [SerializeField] private int toiCountMax = 3;
     private int _toiCount;
@@ -122,7 +122,7 @@ public class RoleCheck : MonoBehaviour
     }
 
     //階段役
-    public int stepLuckyCount;
+    private int stepLuckyCount;
     private int _stepCount;
     public int stepCount
     {
@@ -143,9 +143,9 @@ public class RoleCheck : MonoBehaviour
     }
 
     //役倍率
-    public int luckyRoleMax = 10;
-    public int roleMax = 1;
-    public int twoRoleMax = 2;
+    [SerializeField] int luckyRoleMax = 10;
+    [SerializeField] int roleMax = 1;
+    [SerializeField] int twoRoleMax = 2;
     void Start()
     {
         shiritoriOut = endHiragana[0];
@@ -343,4 +343,74 @@ public class RoleCheck : MonoBehaviour
         return myNumberObject[n] * 10 + myNumberObject[n + 1] == nowDay.Day;
     }
 
+    /// <summary>
+    /// 各役表示
+    /// 0:色役
+    /// 1:しりとり役
+    /// 2:同種役
+    /// 3:階段役
+    /// 4:ラッキー役
+    /// 5:4STEP役
+    /// 6:二種役:
+    /// 7:対種役
+    /// </summary>
+    /// <param name="num"></param>
+    /// <returns></returns>
+    public string SetResult(int num)
+    {
+        switch (num)
+        {
+            case 0:
+                return colorRole.ToString();
+            case 1:
+                return shiritoriCount.ToString();
+                    case 2:
+                return threeKind.ToString();
+            case 3:
+                return stepCount.ToString();
+            case 4:
+                return (dayCount / luckyRoleMax).ToString();
+            case 5:
+                return stepLuckyCount.ToString();
+            case 6:
+                return twoKind.ToString();
+            case 7:
+                return twoLuckyKind.ToString();
+            default:
+                return "";
+        }
+    }
+
+    public int SetScore()
+    {
+        return ((twoKind + twoLuckyKind * luckyRoleMax
+            + colorRole + threeKind * twoRoleMax + shiritoriCount
+            + stepLuckyCount * luckyRoleMax + stepCount * twoRoleMax
+            + dayCount) * scoreStandard);
+    }
+
+    public void Calculate()
+    {
+        RoleColor();
+        RoleShiritori();
+        RoleDay();
+        RoleKind();
+        RoleStep();
+        ToiKind();
+    }
+
+
+    public void RoleReset()//役リセット
+    {
+        stepCount = 0;
+        stepLuckyCount = 0;
+        dayCount = 0;
+        shiritoriCount = 0;
+        threeKind = 0;
+        colorRole = 0;
+        twoLuckyKind = 0;
+        twoKind = 0;
+        toiCount = 0;
+        colorCount = 0;
+    }
 }

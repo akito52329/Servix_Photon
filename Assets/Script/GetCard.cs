@@ -26,13 +26,7 @@ public class GetCard : MonoBehaviour
             if (_onClickCount == 6)
             {
                 //それぞれ役の計算
-                roleCheck.RoleColor();
-                roleCheck.RoleShiritori();
-                roleCheck.RoleDay();
-                roleCheck.RoleKind();
-                roleCheck.RoleStep();
-                roleCheck.ToiKind();
-
+                roleCheck.Calculate();
                 GameDirector.loadState = nextState;
             }
         }
