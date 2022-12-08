@@ -124,7 +124,7 @@ public class GameDirector : MonoBehaviourPunCallbacks
                 }
 
                 photonView.RPC(nameof(GiveRound), RpcTarget.Others, textMove.round);
-
+                Debug.Log(precedence);
                 if (textMove.round == 1)
                 {
                     if (PhotonNetwork.IsMasterClient)
@@ -134,19 +134,10 @@ public class GameDirector : MonoBehaviourPunCallbacks
                 }
                 else
                 {
-                    if (PhotonNetwork.IsMasterClient)
-                    {
-
-                        if (!precedence)
-                        {
-                            CardGeneration();
-                        }
-                    }
-                    else
+                    if (!precedence)
                     {
                         CardGeneration();
                     }
-
                 }
 
 
@@ -230,7 +221,8 @@ public class GameDirector : MonoBehaviourPunCallbacks
         {
 
             Debug.Log("popopop");
-            photonView.RPC(nameof(GiveDisplay), RpcTarget.MasterClient, cardGeneration.clickObject);
+            int[] obs = cardGeneration.clickObject;
+            photonView.RPC(nameof(GiveDisplay), RpcTarget.Others, obs);
         }
 
     }
@@ -285,9 +277,10 @@ public class GameDirector : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    public void GiveDisplay(GameObject[] list)//相手側に自分の最終スコアを渡す
+    public void GiveDisplay(int[] list)
     {
-       cardGeneration.yourClickObject = list;
-        cardGeneration.Generation(false);
+        Debug.Log("asdfghjkl");
+        cardGeneration.yourClickObject = list;
+       
     }
 }

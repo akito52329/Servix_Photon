@@ -8278,8 +8278,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1155202935}
   - component: {fileID: 1155202934}
-  - component: {fileID: 1155202936}
   - component: {fileID: 1155202937}
+  - component: {fileID: 1155202936}
   m_Layer: 0
   m_Name: CardGeneration
   m_TagString: Untagged
@@ -8335,26 +8335,20 @@ MonoBehaviour:
   - {fileID: 8402909255451230293, guid: 580b206854faf73479ec5507e5a93cee, type: 3}
   - {fileID: 5823065620414600520, guid: bc4aeed667601b04c8505328a7976b15, type: 3}
   - {fileID: 991904787522575139, guid: 7244a7c0b649bc1408039dfc076e1e34, type: 3}
-  decks: 00000000
+  decks: 
   genePos:
-  - {fileID: 1337908648}
-  - {fileID: 722740765}
   - {fileID: 1581604489}
+  - {fileID: 1337908648}
   - {fileID: 190669259}
-  - {fileID: 1548830255}
-  - {fileID: 1877229480}
-  - {fileID: 378773628}
-  - {fileID: 1612978368}
+  - {fileID: 722740765}
   - {fileID: 1617909270}
   - {fileID: 362750493}
+  - {fileID: 378773628}
+  - {fileID: 1548830255}
+  - {fileID: 1612978368}
+  - {fileID: 1877229480}
   kindMax: 3
-  clickObject:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  clickObject: 000000000000000000000000000000000000000000000000
   numInitialPos: {fileID: 610530030}
   cardInitialPos: {fileID: 38440720}
 --- !u!4 &1155202935
@@ -8391,7 +8385,7 @@ MonoBehaviour:
   observableSearch: 2
   ObservedComponents:
   - {fileID: 1155202937}
-  sceneViewId: 31
+  sceneViewId: 3
   InstantiationId: 0
   isRuntimeInstantiated: 0
 --- !u!114 &1155202937

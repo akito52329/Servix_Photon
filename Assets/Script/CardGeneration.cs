@@ -19,16 +19,18 @@ public class CardGeneration : MonoBehaviourPunCallbacks
     [SerializeField] List<GameObject> genePos = new List<GameObject>();//生成場所
     [SerializeField] int kindMax = 3;//一枚あたりの枚数
 
-    public GameObject[] clickObject = new GameObject[6];
-    private GameObject[] _yourClickObject;
-    public GameObject[] yourClickObject
+
+
+    public int[] clickObject = new int[6];
+    private int[] _yourClickObject;
+    public int[] yourClickObject
     {
         get { return _yourClickObject; }
         set
         {
-            Debug.Log("your");
+            Debug.Log("6464");
             _yourClickObject = value;
-
+            Generation(false);
         }
     }
     [SerializeField] GameObject numInitialPos;//ナンバーの位置
@@ -45,20 +47,14 @@ public class CardGeneration : MonoBehaviourPunCallbacks
                 decks.Add(i);
             }
         }
-        // Shuffle();
 
-    }
-
-    private void Start()
-    {
         if (PhotonNetwork.IsMasterClient)
         {
             // 実際の処理
             Shuffle();
 
-        }
 
-        
+        }      
     }
 
 
@@ -68,9 +64,9 @@ public class CardGeneration : MonoBehaviourPunCallbacks
         genePosCount = genePos.Count;
         for (int card = 0; card < genePosCount; card++)
         {
-            objectDatas.First().transform.position = genePos[card].transform.position;//10か所に生成
+           // objectDatas.First().transform.position = genePos[card].transform.position;//10か所に生成
             string name = data.data[decks.First()].Name;
-            generatReply.GeneratCards(name, genePos[card].transform, true);
+            generatReply.GeneratCards(name, genePos[card].transform, true, card);
             decks.RemoveAt(0);//生成したカードを除外する
         }
     }
@@ -79,21 +75,29 @@ public class CardGeneration : MonoBehaviourPunCallbacks
     {
         var clickObjeCount = 0;
         Debug.Log("来ちゃー");
+        List<int> cl = new List<int>();
+     
         if (first)//Round１の場合
         {
+            cl = clickObject.ToList();
+            cl.Sort();
+            clickObject = cl.ToArray();
             Debug.Log("my");
             clickObjeCount = clickObject.Length;
 
             for (int card = 0; card < clickObjeCount; card++)
             {
                 string name = data.data[decks.First()].Name;
-                generatReply.GeneratCards(name, clickObject[card].transform, false);
+                generatReply.GeneratCards(name, genePos[clickObject[card]].transform, false, clickObject[card]);
                 decks.RemoveAt(0);//生成したカードを除外する
             }
             CardChenge(clickObjeCount, clickObject);
         }
         else
         {
+            cl = yourClickObject.ToList();
+            cl.Sort();
+            _yourClickObject = cl.ToArray();
 
             // CardChenge();
             clickObjeCount = yourClickObject.Length;
@@ -101,12 +105,12 @@ public class CardGeneration : MonoBehaviourPunCallbacks
             for (int card = 0; card < clickObjeCount; card++)
             {
                 string name = data.data[decks.First()].Name;
-                generatReply.GeneratCards(name, yourClickObject[card].transform, false);
+                generatReply.GeneratCards(name, genePos[yourClickObject[card]].transform, false, yourClickObject[card]);
                 decks.RemoveAt(0);//生成したカードを除外する
             }
             CardChenge(clickObjeCount, yourClickObject);
         }
-        // photonView.RPC(nameof(GiveDeck), RpcTarget.Others, decks.ToArray());
+         generatReply.Numbers();
 
 
     }
@@ -114,26 +118,26 @@ public class CardGeneration : MonoBehaviourPunCallbacks
         public void Shuffle() // デッキをシャッフルする
     {
         decks = decks.OrderBy(shuffle => Guid.NewGuid()).ToList();
-        photonView.RPC(nameof(GiveDeck), RpcTarget.Others, decks);
     }
 
 
-    private void CardChenge(int ob ,GameObject[] objects)
+    private void CardChenge(int ob ,int[] objects)
     {
+        List<ObjectData> obd = new List<ObjectData>();
+        foreach(ObjectData o in generatReply.gameObject.GetComponentsInChildren<ObjectData>())
+        {
+            obd.Add(o);
+        }
+
         for(int card = 0; card < ob; card++)//クリックした分だけチェンジ
         {
-            PhotonNetwork.Destroy(objects[card].gameObject);
+            GameObject o = obd.Find(n => n.GetPostionNumber() == objects[card]).gameObject;
+            PhotonNetwork.Destroy(o);
            // clickObject[card].transform.position = cardInitialPos.transform.position;
             getCard.numberUi[card].transform.position = numInitialPos.transform.position;
         }
      /*   gameDirector.chenge = true;
         photonView.RPC(nameof(GiveChenge), RpcTarget.Others, gameDirector.chenge);*/
-    }
-
-    [PunRPC]
-    public void GiveDeck(int[] list)
-    {
-        decks = list.ToList();
     }
 
 }

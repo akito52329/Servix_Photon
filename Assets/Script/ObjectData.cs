@@ -21,6 +21,7 @@ public class ObjectData : MonoBehaviour
     public char nameEnd;//語尾
     public Color myColor;//オブジェクトの色
     public int myNumber;//オブジェクトの持っている数字
+    public int myPosNumber;
 
     void Awake()
     {
@@ -60,7 +61,9 @@ public class ObjectData : MonoBehaviour
            transform.parent = GameObject.Find("Parent").transform;
        }
 
-        myButton.onClick.AddListener(() => ClickCard(this.gameObject));//onClickに押した時の処理を代入
+       // myPosNumber = cardGeneration.GetPositonNumber();
+
+        myButton.onClick.AddListener(() => ClickCard());//onClickに押した時の処理を代入
     }
 
     void Update()
@@ -96,15 +99,25 @@ public class ObjectData : MonoBehaviour
         }
     }*/
 
-
-    private void ClickCard(GameObject card)//ボタンが押されたときに
+    public int GetPostionNumber()
     {
+        return myPosNumber;
+    }
+
+    public void SetPostionNumber(int num)
+    {
+        myPosNumber = num;
+    }
+
+    private void ClickCard()//ボタンが押されたときに
+    {
+
         audio.ClickAudio();
         myButton.interactable = false;
 
         if (getCard.onClickCount <= cardGeneration.clickObject.Length)
         {
-            cardGeneration.clickObject[getCard.onClickCount] = card;
+            cardGeneration.clickObject[getCard.onClickCount] = myPosNumber;
             getCard.SelectCard();
         }
 

@@ -36,13 +36,21 @@ public class GeneratReply : MonoBehaviourPunCallbacks
         if(GameDirector.loadState == GameDirector.GameState.Round)
         {
             director.ChengeInteractable();
+            
+        }
+
+        if(GameDirector.loadState == GameDirector.GameState.InGame)
+        {
+            PotitionNumber();
         }
     }
 
-    public void GeneratCards(string name, Transform transform, bool check)
+    public void GeneratCards(string name, Transform transform, bool check, int num)
     {
         GameObject card = PhotonNetwork.Instantiate(name, transform.position, Quaternion.identity);
         card.transform.parent = gameObject.transform;
+        card.GetComponent<ObjectData>().SetPostionNumber(num);
+       // photonView.RPC(nameof(PotitionNumber), RpcTarget.Others, num);
         fast = check;
         counter++;
     } 
@@ -62,5 +70,37 @@ public class GeneratReply : MonoBehaviourPunCallbacks
     {
         rpc = c;
         director.ChengeInteractable();
+    }
+
+   // [PunRPC]
+    public void PotitionNumber(/*int num*/)
+    {
+        ObjectData[] od = GetComponentsInChildren<ObjectData>();
+        for(int i = 0; i < od.Length; i++)
+        {
+            od[i].SetPostionNumber(i);
+        }
+    }
+
+    public void Numbers()
+    {
+        ObjectData[] od = GetComponentsInChildren<ObjectData>();
+        int[] nums = new int[od.Length];
+        for(int i = 0; i < od.Length; i++)
+        {
+            nums[i] = od[i].GetPostionNumber();
+        }
+
+        photonView.RPC(nameof(SetNumber), RpcTarget.Others, nums);
+    }
+
+    [PunRPC]
+    public void SetNumber(int[] n)
+    {
+        ObjectData[] od = GetComponentsInChildren<ObjectData>();
+        for(int j = 0; j < od.Length; j++)
+        {
+            od[j].SetPostionNumber(n[j]);
+        }
     }
 }
