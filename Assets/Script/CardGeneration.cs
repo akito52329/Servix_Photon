@@ -18,8 +18,8 @@ public class CardGeneration : MonoBehaviourPunCallbacks
     [SerializeField] List<int> decks = new List<int>();
     [SerializeField] List<GameObject> genePos = new List<GameObject>();//生成場所
     [SerializeField] int kindMax = 3;//一枚あたりの枚数
-
-
+    public bool master;
+    public int g;
 
     public int[] clickObject = new int[6];
     private int[] _yourClickObject;
@@ -54,9 +54,22 @@ public class CardGeneration : MonoBehaviourPunCallbacks
             Shuffle();
 
 
-        }      
+        }
+
+        master = PhotonNetwork.IsMasterClient;
     }
 
+    public int GetPositonNumber(Transform t)
+    {
+        for(int g = 0; g < genePos.Count; g++)
+        {
+            if(genePos[g] == t)
+            {
+                return g;
+            }
+        }
+        return 0;
+    }
 
     public void FastGeneration()//カード生成
     {
@@ -115,7 +128,7 @@ public class CardGeneration : MonoBehaviourPunCallbacks
 
     }
 
-        public void Shuffle() // デッキをシャッフルする
+    public void Shuffle() // デッキをシャッフルする
     {
         decks = decks.OrderBy(shuffle => Guid.NewGuid()).ToList();
     }

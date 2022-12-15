@@ -41,7 +41,7 @@ public class GeneratReply : MonoBehaviourPunCallbacks
 
         if(GameDirector.loadState == GameDirector.GameState.InGame)
         {
-            PotitionNumber();
+          //  PotitionNumber();
         }
     }
 

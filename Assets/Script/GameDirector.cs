@@ -160,6 +160,7 @@ public class GameDirector : MonoBehaviourPunCallbacks
                       {
                           photonView.RPC("YourScore", RpcTarget.Others, scoreTextCo.totalScore);
                       }*/
+
                 photonView.RPC(nameof(YourScore), RpcTarget.Others, scoreTextCo.totalScore);
                 textMove.round++;
 

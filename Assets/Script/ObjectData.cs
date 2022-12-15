@@ -61,7 +61,11 @@ public class ObjectData : MonoBehaviour
            transform.parent = GameObject.Find("Parent").transform;
        }
 
-       // myPosNumber = cardGeneration.GetPositonNumber();
+        if (!cardGeneration.master)
+        {
+            myPosNumber = cardGeneration.GetPositonNumber(gameObject.transform);
+        }
+       // 
 
         myButton.onClick.AddListener(() => ClickCard());//onClickに押した時の処理を代入
     }
