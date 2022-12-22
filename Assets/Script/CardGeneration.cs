@@ -63,7 +63,7 @@ public class CardGeneration : MonoBehaviourPunCallbacks
     {
         for(int g = 0; g < genePos.Count; g++)
         {
-            if(genePos[g] == t)
+            if(genePos[g].transform.position == t.position)
             {
                 return g;
             }
@@ -82,6 +82,8 @@ public class CardGeneration : MonoBehaviourPunCallbacks
             generatReply.GeneratCards(name, genePos[card].transform, true, card);
             decks.RemoveAt(0);//生成したカードを除外する
         }
+
+        generatReply.Numbers();
     }
 
     public void Generation(bool first)//カード生成

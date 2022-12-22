@@ -73,7 +73,7 @@ public class GeneratReply : MonoBehaviourPunCallbacks
     }
 
    // [PunRPC]
-    public void PotitionNumber(/*int num*/)
+    public void PositionNumber(/*int num*/)
     {
         ObjectData[] od = GetComponentsInChildren<ObjectData>();
         for(int i = 0; i < od.Length; i++)
@@ -88,18 +88,42 @@ public class GeneratReply : MonoBehaviourPunCallbacks
         int[] nums = new int[od.Length];
         for(int i = 0; i < od.Length; i++)
         {
+
             nums[i] = od[i].GetPostionNumber();
         }
 
-        photonView.RPC(nameof(SetNumber), RpcTarget.Others, nums);
+        photonView.RPC(nameof(SetNumber), RpcTarget.OthersBuffered, nums);
     }
 
     [PunRPC]
     public void SetNumber(int[] n)
     {
-        ObjectData[] od = GetComponentsInChildren<ObjectData>();
-        for(int j = 0; j < od.Length; j++)
+        StartCoroutine(L(n));
+        /*ObjectData[] od = GetComponentsInChildren<ObjectData>();
+        Debug.Log(od.Length);
+        for (int j = 0; j < od.Length; j++)
         {
+            Debug.Log($"{od[j].name} , {n[j]}");
+            od[j].SetPostionNumber(n[j]);
+        }*/
+    }
+
+    IEnumerator L(int[] n)
+    {
+        while (true)
+        {
+
+            yield return new WaitUntil(() => GetComponentsInChildren<ObjectData>().Length == 10);
+
+            break;
+        }
+
+        ObjectData[] od = GetComponentsInChildren<ObjectData>();
+
+        Debug.Log(od.Length);
+        for (int j = 0; j < od.Length; j++)
+        {
+            Debug.Log($"{od[j].name} , {n[j]}");
             od[j].SetPostionNumber(n[j]);
         }
     }
