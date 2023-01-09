@@ -89,7 +89,6 @@ public class CardGeneration : MonoBehaviourPunCallbacks
     public void Generation(bool first)//カード生成
     {
         var clickObjeCount = 0;
-        Debug.Log("来ちゃー");
         List<int> cl = new List<int>();
      
         if (first)//Round１の場合

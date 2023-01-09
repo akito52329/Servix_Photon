@@ -124,7 +124,7 @@ public class GameDirector : MonoBehaviourPunCallbacks
                 }
 
                 photonView.RPC(nameof(GiveRound), RpcTarget.Others, textMove.round);
-                Debug.Log(precedence);
+
                 if (textMove.round == 1)
                 {
                     if (PhotonNetwork.IsMasterClient)
@@ -155,12 +155,6 @@ public class GameDirector : MonoBehaviourPunCallbacks
                 scorePanel.gameObject.SetActive(true);
                 scoreTextCo.RoleScore();
                 scorePanel.ScaleUp();
-
-                /*      if((float)textMove.round / 2 == textMove.round / 2)//偶数
-                      {
-                          photonView.RPC("YourScore", RpcTarget.Others, scoreTextCo.totalScore);
-                      }*/
-
                 photonView.RPC(nameof(YourScore), RpcTarget.Others, scoreTextCo.totalScore);
                 textMove.round++;
 
@@ -230,11 +224,6 @@ public class GameDirector : MonoBehaviourPunCallbacks
 
     public void ChengeInteractable()//ボタンを押せるようにする
     {
-        Debug.Log(10000000);
-       /*bool checke = 
-            PhotonNetwork.IsMasterClient ? 
-            (float)textMove.round / 2 != textMove.round / 2 
-            : (float)textMove.round / 2 == textMove.round / 2;*/
         foreach (Button b in bottonsParent.GetComponentsInChildren<Button>())
         {
             b.interactable = precedence;
@@ -270,17 +259,9 @@ public class GameDirector : MonoBehaviourPunCallbacks
         loadState = GameState.Round;
     }
 
-
-    [PunRPC]
-    public void GiveState(GameState state)
-    {
-        loadState = state;
-    }
-
     [PunRPC]
     public void GiveDisplay(int[] list)
     {
-        Debug.Log("asdfghjkl");
         cardGeneration.yourClickObject = list;
        
     }

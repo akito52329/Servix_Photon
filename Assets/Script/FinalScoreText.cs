@@ -40,7 +40,7 @@ public class FinalScoreText : MonoBehaviour
         {
             if (_finalYourScore != value)
             {
-                _finalYourScore += value;
+                _finalYourScore = value;
                 yourTotalScoreText.text = _finalYourScore.ToString();
                 ScaleUp();
             }
@@ -61,6 +61,7 @@ public class FinalScoreText : MonoBehaviour
 
     public int FinalScore(int score ,float time, bool first)//最終スコア
     {
+        Debug.Log(888);
         this.time += (int)time;
         timeScore += this.time / proportion;
         if(!first)
@@ -68,7 +69,7 @@ public class FinalScoreText : MonoBehaviour
             firstBonus = 0;
         }
         detailText.text = timeScore + "=" + this.time + "/" + proportion + $"\n{firstBonus}";
-        return finalScore += score + timeScore + firstBonus;
+        return finalScore = score + timeScore + firstBonus;
     }
 
     public void GameScore()//最終スコア表示
