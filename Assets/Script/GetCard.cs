@@ -25,6 +25,7 @@ public class GetCard : MonoBehaviour
             _onClickCount = value;
             if (_onClickCount == 6)
             {
+                Debug.Log(_onClickCount);
                 //それぞれ役の計算
                 roleCheck.Calculate();
                 GameDirector.loadState = nextState;

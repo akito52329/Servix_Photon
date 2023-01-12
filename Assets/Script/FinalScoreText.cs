@@ -40,6 +40,7 @@ public class FinalScoreText : MonoBehaviour
         {
             if (_finalYourScore != value)
             {
+                Debug.Log("kajsjdjdjdj");
                 _finalYourScore = value;
                 yourTotalScoreText.text = _finalYourScore.ToString();
                 ScaleUp();
@@ -59,23 +60,35 @@ public class FinalScoreText : MonoBehaviour
 
     [SerializeField] RectTransform rectTransform;
 
-    public int FinalScore(int score ,float time, bool first)//最終スコア
+   /* public int FinalScore(int score ,float time, bool first)//最終スコア
     {
         Debug.Log(888);
-        this.time += (int)time;
-        timeScore += this.time / proportion;
+        this.time = (int)time;
+        timeScore = this.time / proportion;
         if(!first)
         {
             firstBonus = 0;
         }
         detailText.text = timeScore + "=" + this.time + "/" + proportion + $"\n{firstBonus}";
         return finalScore = score + timeScore + firstBonus;
+    }*/
+
+    public void FinalScore(int score, float time, bool first)//最終スコア
+    {
+        Debug.Log(888);
+        this.time = (int)time;
+        timeScore = this.time / proportion;
+        if (!first)
+        {
+            firstBonus = 0;
+        }
+        detailText.text = timeScore + "=" + this.time + "/" + proportion + $"\n{firstBonus}";
+        finalScore = score + timeScore + firstBonus;
     }
 
     public void GameScore()//最終スコア表示
     {
-        Debug.Log(finalScore);
-        Debug.Log(finalYourScore);
+        Debug.Log($"{finalScore} vs {finalYourScore}");
 
         if (finalScore == finalYourScore)//スコアが同じ
         {
@@ -94,6 +107,8 @@ public class FinalScoreText : MonoBehaviour
             resultText.text = inferiority;
             audio.LoseAudio();
         }
+        Debug.Log($"{finalScore} vs {finalYourScore} :" +
+            resultText.text);
     }
 
     public void ScaleUp()

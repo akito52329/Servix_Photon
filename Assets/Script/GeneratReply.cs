@@ -38,11 +38,6 @@ public class GeneratReply : MonoBehaviourPunCallbacks
             director.ChengeInteractable();
             
         }
-
-        if(GameDirector.loadState == GameDirector.GameState.InGame)
-        {
-          //  PotitionNumber();
-        }
     }
 
     public void GeneratCards(string name, Transform transform, bool check, int num)
@@ -72,15 +67,6 @@ public class GeneratReply : MonoBehaviourPunCallbacks
         director.ChengeInteractable();
     }
 
-   // [PunRPC]
-    public void PositionNumber(/*int num*/)
-    {
-        ObjectData[] od = GetComponentsInChildren<ObjectData>();
-        for(int i = 0; i < od.Length; i++)
-        {
-            od[i].SetPostionNumber(i);
-        }
-    }
 
     public void Numbers()
     {
@@ -120,10 +106,8 @@ public class GeneratReply : MonoBehaviourPunCallbacks
 
         ObjectData[] od = GetComponentsInChildren<ObjectData>();
 
-        Debug.Log(od.Length);
         for (int j = 0; j < od.Length; j++)
         {
-            Debug.Log($"{od[j].name} , {n[j]}");
             od[j].SetPostionNumber(n[j]);
         }
     }

@@ -6,7 +6,6 @@ using DG.Tweening;
 
 public class DetailsPanel: MonoBehaviour
 {
-    [SerializeField] AudioController audio;
     [SerializeField] GameObject rule;//ルール表示
     [SerializeField] GameObject role;//役表示
     [SerializeField] GameObject[] roleObject;//役表示

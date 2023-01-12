@@ -23,7 +23,7 @@ public class ScorePanel : MonoBehaviour
 
     IEnumerator Scale()//スコアパネルの表示コルーチン
     {
-        rectTransform.DOScale(Vector3.one, 1f);
+        rectTransform.DOScale(Vector3.one, 0.5f);
         yield return new WaitForSeconds(time);
         rectTransform.DOScale(Vector3.zero, 1f).OnComplete(() => GameDirector.loadState = nextState).Play();
     }

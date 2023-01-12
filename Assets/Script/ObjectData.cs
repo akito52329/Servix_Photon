@@ -14,6 +14,10 @@ public class ObjectData : MonoBehaviour
     [SerializeField] AudioController audio;
     [SerializeField] Data data;
 
+    private AudioController audioController;
+    private AudioSource se;
+    [SerializeField] AudioClip seClip;
+
     private int maxClick = 6;//クリックの回数
     [SerializeField] int id;
     public string name;//オブジェクトの名前
@@ -35,9 +39,11 @@ public class ObjectData : MonoBehaviour
 
     private void Start()
     {
+
+
         if(roleCheck == null)
         {
-            roleCheck = GameObject.Find("Role").GetComponent<RoleCheck>();
+            roleCheck = GameObject.Find("RoleCheck").GetComponent<RoleCheck>();
         }
 
         if(getCard == null)
@@ -65,7 +71,9 @@ public class ObjectData : MonoBehaviour
         {
             myPosNumber = cardGeneration.GetPositonNumber(gameObject.transform);
         }
-       // 
+        // 
+        se = GetComponent<AudioSource>();
+        audioController = new AudioController(se, seClip);
 
         myButton.onClick.AddListener(() => ClickCard());//onClickに押した時の処理を代入
     }
@@ -92,16 +100,6 @@ public class ObjectData : MonoBehaviour
         }
     }
 
-    /*public void MyButton()//ボタンを押されたら処理する
-    {
-        Debug.Log(987565);
-        audio.ClickAudio();
-        myButton.interactable = false;
-        if (roleCheck != null)
-        {
-            roleCheck.Role(myColor, nameTop, nameEnd, myNumber, name);
-        }
-    }*/
 
     public int GetPostionNumber()
     {
@@ -116,7 +114,8 @@ public class ObjectData : MonoBehaviour
     private void ClickCard()//ボタンが押されたときに
     {
 
-        audio.ClickAudio();
+
+
         myButton.interactable = false;
 
         if (getCard.onClickCount <= cardGeneration.clickObject.Length)
@@ -129,6 +128,8 @@ public class ObjectData : MonoBehaviour
         {
             roleCheck.Role(myColor, nameTop, nameEnd, myNumber, name);
         }
+
+        audioController.ChengePlayAudio(true);
     }
 }
 
