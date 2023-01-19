@@ -122,6 +122,7 @@ public class RoleCheck : MonoBehaviour
     }
 
     //階段役
+    private int stepLuckyCounter;
     private int stepLuckyCount;
     private int _stepCount;
     public int stepCount
@@ -134,11 +135,11 @@ public class RoleCheck : MonoBehaviour
         {
             _stepCount = value;
 
-            if(_stepCount >= 4)
+           /* if(_stepCount >= 2)
             {
-                stepLuckyCount += oneCount;
+
                 _stepCount = 0;
-            }
+            }*/
         }
     }
 
@@ -307,6 +308,16 @@ public class RoleCheck : MonoBehaviour
                 if (myNumberObject[n] == myNumberObject[n + 1] - 1 && myNumberObject[n] == myNumberObject[n + 2] - 2)
                 {
                     stepCount += oneCount;
+
+                    if (stepLuckyCounter == 1)
+                    {
+                        stepLuckyCount += oneCount;
+                        stepLuckyCounter = 0;
+                    }
+                    else
+                    {
+                        stepLuckyCounter++;
+                    }
                 }
             }
 

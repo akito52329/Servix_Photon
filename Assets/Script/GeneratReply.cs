@@ -6,6 +6,8 @@ using Photon.Pun;
 
 public class GeneratReply : MonoBehaviourPunCallbacks
 {
+    [SerializeField] GameObject p;
+    [SerializeField] CardGeneration cardGeneration;
     [SerializeField] GameDirector director;
     [SerializeField] int fastCount = 10;
     [SerializeField] int afterCount = 6;
@@ -42,10 +44,15 @@ public class GeneratReply : MonoBehaviourPunCallbacks
 
     public void GeneratCards(string name, Transform transform, bool check, int num)
     {
-        GameObject card = PhotonNetwork.Instantiate(name, transform.position, Quaternion.identity);
-        card.transform.parent = gameObject.transform;
+        /* GameObject card = PhotonNetwork.Instantiate(name, transform.position, Quaternion.identity);
+         card.transform.parent = gameObject.transform;
+         card.GetComponent<ObjectData>().SetPostionNumber(num);
+         fast = check;
+         counter++;*/
+        GameObject card = PhotonNetwork.Instantiate(name, Vector3.zero, Quaternion.identity);
+        card.transform.parent = transform;
+        card.transform.localPosition = Vector3.zero;
         card.GetComponent<ObjectData>().SetPostionNumber(num);
-       // photonView.RPC(nameof(PotitionNumber), RpcTarget.Others, num);
         fast = check;
         counter++;
     } 
@@ -70,9 +77,14 @@ public class GeneratReply : MonoBehaviourPunCallbacks
 
     public void Numbers()
     {
-        ObjectData[] od = GetComponentsInChildren<ObjectData>();
-        int[] nums = new int[od.Length];
-        for(int i = 0; i < od.Length; i++)
+        List<ObjectData> od = new List<ObjectData>();
+        foreach (var k in GetComponentsInChildren<GameObject>())
+        {
+            od.Add(k.GetComponentInChildren<ObjectData>());
+        }
+        Debug.Log(od.Count);
+        int[] nums = new int[od.Count];
+        for(int i = 0; i < od.Count; i++)
         {
 
             nums[i] = od[i].GetPostionNumber();
@@ -84,6 +96,7 @@ public class GeneratReply : MonoBehaviourPunCallbacks
     [PunRPC]
     public void SetNumber(int[] n)
     {
+        cardGeneration.geneNum = n;
         StartCoroutine(L(n));
         /*ObjectData[] od = GetComponentsInChildren<ObjectData>();
         Debug.Log(od.Length);
@@ -99,16 +112,17 @@ public class GeneratReply : MonoBehaviourPunCallbacks
         while (true)
         {
 
-            yield return new WaitUntil(() => GetComponentsInChildren<ObjectData>().Length == 10);
+            yield return new WaitUntil(() => p.GetComponentsInChildren<ObjectData>().Length == 10);
 
             break;
         }
 
-        ObjectData[] od = GetComponentsInChildren<ObjectData>();
+     /*   List<ObjectData> od = p.GetComponentsInChildren<ObjectData>();
 
-        for (int j = 0; j < od.Length; j++)
+
+        for (int j = 0; j < od.Count; j++)
         {
             od[j].SetPostionNumber(n[j]);
-        }
+        }*/
     }
 }

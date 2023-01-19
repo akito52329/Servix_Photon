@@ -22,17 +22,18 @@ public class CardGeneration : MonoBehaviourPunCallbacks
     public int g;
 
     public int[] clickObject = new int[6];
-    private int[] _yourClickObject;
+    public int[] _yourClickObject;
     public int[] yourClickObject
     {
         get { return _yourClickObject; }
         set
         {
-            Debug.Log("6464");
             _yourClickObject = value;
             Generation(false);
         }
     }
+
+    public int[] geneNum;
     [SerializeField] GameObject numInitialPos;//ナンバーの位置
     [SerializeField] GameObject cardInitialPos;//初期位置
 

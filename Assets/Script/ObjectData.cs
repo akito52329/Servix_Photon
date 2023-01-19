@@ -64,13 +64,24 @@ public class ObjectData : MonoBehaviour
 
        if (transform.parent == null)
        {
-           transform.parent = GameObject.Find("Parent").transform;
+            foreach(Transform child in GameObject.Find("Parent").gameObject.GetComponentsInChildren<Transform>())
+            {
+                if(child.name == myNumber.ToString())
+                {
+                    transform.parent = child;
+
+                    if (!cardGeneration.master)
+                    {
+                        transform.position = Vector3.zero;
+                       // myPosNumber = int.Parse(GetComponentInParent<GameObject>().name);
+                    }
+                    break;
+                }
+            }
+           
        }
 
-        if (!cardGeneration.master)
-        {
-            myPosNumber = cardGeneration.GetPositonNumber(gameObject.transform);
-        }
+            
         // 
         se = GetComponent<AudioSource>();
         audioController = new AudioController(se, seClip);
@@ -108,6 +119,7 @@ public class ObjectData : MonoBehaviour
 
     public void SetPostionNumber(int num)
     {
+        Debug.Log(num);
         myPosNumber = num;
     }
 
