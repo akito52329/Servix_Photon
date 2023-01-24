@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
+using System.Linq;
 using Photon.Pun;
 
 public class GeneratReply : MonoBehaviourPunCallbacks
@@ -44,17 +46,17 @@ public class GeneratReply : MonoBehaviourPunCallbacks
 
     public void GeneratCards(string name, Transform transform, bool check, int num)
     {
-        /* GameObject card = PhotonNetwork.Instantiate(name, transform.position, Quaternion.identity);
+         GameObject card = PhotonNetwork.Instantiate(name, transform.position, Quaternion.identity);
          card.transform.parent = gameObject.transform;
          card.GetComponent<ObjectData>().SetPostionNumber(num);
          fast = check;
-         counter++;*/
-        GameObject card = PhotonNetwork.Instantiate(name, Vector3.zero, Quaternion.identity);
+         counter++;
+       /* GameObject card = PhotonNetwork.Instantiate(name, Vector3.zero, Quaternion.identity);
         card.transform.parent = transform;
         card.transform.localPosition = Vector3.zero;
         card.GetComponent<ObjectData>().SetPostionNumber(num);
         fast = check;
-        counter++;
+        counter++;*/
     } 
 
     private void OnInteractable(bool countCheck)
@@ -117,12 +119,12 @@ public class GeneratReply : MonoBehaviourPunCallbacks
             break;
         }
 
-     /*   List<ObjectData> od = p.GetComponentsInChildren<ObjectData>();
+        List<ObjectData> od = p.GetComponentsInChildren<ObjectData>().ToList();
 
 
         for (int j = 0; j < od.Count; j++)
         {
             od[j].SetPostionNumber(n[j]);
-        }*/
+        }
     }
 }
