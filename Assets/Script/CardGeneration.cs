@@ -62,12 +62,12 @@ public class CardGeneration : MonoBehaviourPunCallbacks
 
     public int GetPositonNumber(Transform t)
     {
-        for(int g = 0; g < genePos.Count; g++)
+        for (int g = 0; g < genePos.Count; g++)
         {
-            if(genePos[g].transform.position == t.position)
-            {
-                return g;
-            }
+                if (genePos[g].transform.position == t.position)
+                {
+                    return g;
+                }
         }
         return 0;
     }
