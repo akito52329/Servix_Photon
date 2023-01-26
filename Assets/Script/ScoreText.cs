@@ -9,7 +9,6 @@ public class ScoreText : MonoBehaviour
     [SerializeField] GameDirector.GameState finishState;
 
     [SerializeField] RoleCheck roleCheck;
-
     [SerializeField] Text scoreText;
     [SerializeField] Text myTotalScoreText;
     public Text yourTotalScoreText;
@@ -31,7 +30,7 @@ public class ScoreText : MonoBehaviour
 
     public int totalScore;
     public int yourScore = 0;
-    private int _score = 0;//スコア取得
+    private int _score = 100;//スコア取得
     public int score
     {
         get
@@ -49,7 +48,7 @@ public class ScoreText : MonoBehaviour
 
     void Start()
     {
-        TotalScore();
+        totalScore += 100;
     }
 
     public void RoleScore()
@@ -59,7 +58,6 @@ public class ScoreText : MonoBehaviour
         {
             roleTexts[r].text = roleCheck.SetResult(r);
         }
-
 
         //ラウンド１回分のスコア
         score = roleCheck.SetScore();

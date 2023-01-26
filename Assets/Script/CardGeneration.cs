@@ -33,6 +33,7 @@ public class CardGeneration : MonoBehaviourPunCallbacks
         }
     }
 
+    public List<int> nums;
     public int[] geneNum;
     [SerializeField] GameObject numInitialPos;//ナンバーの位置
     [SerializeField] GameObject cardInitialPos;//初期位置
@@ -142,10 +143,12 @@ public class CardGeneration : MonoBehaviourPunCallbacks
         foreach(ObjectData o in generatReply.gameObject.GetComponentsInChildren<ObjectData>())
         {
             obd.Add(o);
+            nums.Add(o.GetPostionNumber());
         }
 
         for(int card = 0; card < ob; card++)//クリックした分だけチェンジ
         {
+            
             GameObject o = obd.Find(n => n.GetPostionNumber() == objects[card]).gameObject;
             PhotonNetwork.Destroy(o);
            // clickObject[card].transform.position = cardInitialPos.transform.position;

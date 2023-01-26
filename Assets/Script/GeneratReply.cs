@@ -48,7 +48,7 @@ public class GeneratReply : MonoBehaviourPunCallbacks
     {
          GameObject card = PhotonNetwork.Instantiate(name, transform.position, Quaternion.identity);
          card.transform.parent = gameObject.transform;
-         card.GetComponent<ObjectData>().SetPostionNumber(num);
+         card.GetComponent<ObjectData>().SetPostionNumber(num, true);
          fast = check;
          counter++;
        /* GameObject card = PhotonNetwork.Instantiate(name, Vector3.zero, Quaternion.identity);
@@ -133,7 +133,7 @@ public class GeneratReply : MonoBehaviourPunCallbacks
 
         for (int j = 0; j < od.Length; j++)
         {
-            od[j].SetPostionNumber(n[j]);
+            od[j].SetPostionNumber(n[j], false);
         }
     }
 }

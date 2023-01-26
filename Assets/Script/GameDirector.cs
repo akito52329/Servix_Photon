@@ -89,10 +89,18 @@ public class GameDirector : MonoBehaviourPunCallbacks
 
     void Update()
     {
-        if(final == yourFinal && final)//2人とも終了したか
+        if(yourFinal)
         {
-            loadState = GameState.Finish;
+            if (final == yourFinal)//2人とも終了したか
+            {
+                loadState = GameState.Finish;
+            }
+            else
+            {
+                loadState = GameState.Wait;
+            }
         }
+       
 
         Debug.Log(loadState);
     }
@@ -161,21 +169,18 @@ public class GameDirector : MonoBehaviourPunCallbacks
             case GameState.Wait:
                 final = true;
                 timer.ChengeCountTime(false);
-                if (final != yourFinal)//先に終了
+                if (final == yourFinal)//先に終了
                 {
                     waitPanel.SetActive(true);
                     first = true;                    
                     photonView.RPC(nameof(FinalCheck), RpcTarget.Others, final);
                     photonView.RPC(nameof(YourScore), RpcTarget.Others, scoreTextCo.totalScore);
-                    if (!PhotonNetwork.InRoom)
-                    {
-                        yourFinal = true;
-                    }
                 }
                 else//最後に終了
                 {
                     first = false;
                     photonView.RPC(nameof(FinalCheck), RpcTarget.Others, final);
+                    photonView.RPC(nameof(YourScore), RpcTarget.Others, scoreTextCo.totalScore);
                 }
                 break;
             case GameState.Finish:

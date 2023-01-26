@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -67,10 +68,7 @@ public class ObjectData : MonoBehaviour
             transform.parent = GameObject.Find("Parent").transform;
         }
 
-        if (!cardGeneration.master)
-        {
-            myPosNumber = cardGeneration.GetPositonNumber(gameObject.transform);
-        }
+        
 
 
         // 
@@ -108,10 +106,28 @@ public class ObjectData : MonoBehaviour
         return myPosNumber;
     }
 
-    public void SetPostionNumber(int num)
+    public void SetPostionNumber(int num, bool n)
     {
         Debug.Log(num);
         myPosNumber = num;
+
+        if (/*!cardGeneration.master*/!n)
+        {
+            GameObject g = GameObject.Find("CardPos");
+            Debug.Log(g.name);
+            if (g != null)
+            {
+                foreach (RectTransform r in g.GetComponentsInChildren<RectTransform>())
+                {
+                    int nn;
+                    int.TryParse(r.gameObject.name, out nn);
+                    if (nn == myPosNumber)
+                    {                       
+                        GetComponent<RectTransform>().anchoredPosition = r.anchoredPosition;
+                    }
+                }
+            }
+        }
     }
 
     private void ClickCard()//ボタンが押されたときに

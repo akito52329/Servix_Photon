@@ -11,6 +11,11 @@ public class Timer : MonoBehaviour
     [SerializeField] private float maxTime = 180;//ŠÔ‚ÌÅ‘åŠÔ
     [SerializeField] private float minTime = 0;
 
+    private void Start()
+    {
+        timerText.text = maxTime.ToString("f0");
+    }
+
     // Update is called once per frame
     void Update()
     {
