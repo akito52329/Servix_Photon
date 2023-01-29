@@ -108,7 +108,6 @@ public class ObjectData : MonoBehaviour
 
     public void SetPostionNumber(int num, bool n)
     {
-        Debug.Log(num);
         myPosNumber = num;
 
         if (/*!cardGeneration.master*/!n)

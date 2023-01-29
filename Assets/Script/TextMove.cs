@@ -2,16 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 using TMPro;
 using DG.Tweening;
 
 public class TextMove : MonoBehaviour
 {
+    [SerializeField] GameDirector gameDirector;
     [SerializeField] GameDirector.GameState nextState;
     [SerializeField] AudioController audio;
     [SerializeField] private float centerPos = 0;
     [SerializeField] Text roundText;
     [SerializeField] Text roundDisplayText;
+    [SerializeField] Text myTurnText;
     [SerializeField] string roundName = "ラウンド ";
     [SerializeField] string finalRoundName = "ファイナル ラウンド";
 
@@ -52,7 +55,9 @@ public class TextMove : MonoBehaviour
 
     public void RoundText()//ラウンド表示
     {
-        if(round < finalRound)
+        myTurnText.text = gameDirector.GetAfterThat() ? "あなたのターン" : "あいてのターン";
+
+        if (round < finalRound)
         {
             roundText.text = roundName + _round.ToString();
             roundDisplayText.text = roundName + _round.ToString();

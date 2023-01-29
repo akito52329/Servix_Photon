@@ -26,6 +26,10 @@ public class GameDirector : MonoBehaviourPunCallbacks
     [SerializeField] GameObject waitPanel;
     [SerializeField] GameObject bottonsParent;
 
+    private AudioController audioController;
+    [SerializeField] AudioSource bgm;
+    [SerializeField] AudioClip bgmClip;
+
     private int maxRound = 10;
     bool precedence = false;
 
@@ -82,6 +86,8 @@ public class GameDirector : MonoBehaviourPunCallbacks
         }
 
         precedence = PhotonNetwork.IsMasterClient;
+        audioController = new AudioController(bgm, bgmClip);
+        audioController.ChengePlayAudio(true);
 
         loadState = GameState.Round;
         maxRound = textMove.GetRound();
@@ -184,13 +190,12 @@ public class GameDirector : MonoBehaviourPunCallbacks
                 }
                 break;
             case GameState.Finish:
+                audioController.ChengePlayAudio(false);
                 timer.ChengeCountTime(false);
                 waitPanel.SetActive(false);
-                // photonView.RPC(nameof(YourTotalScore), RpcTarget.Others, finalScoreText.FinalScore(scoreTextCo.totalScore, timer.SetTime(), first));
                 finalScoreText.FinalScore(scoreTextCo.totalScore, timer.SetTime(), first);
                 photonView.RPC(nameof(YourTotalScore), RpcTarget.Others, finalScoreText.finalScore);
                 finalScoreText.gameObject.SetActive(true);
-              
                 break;
         }
     }
@@ -201,6 +206,11 @@ public class GameDirector : MonoBehaviourPunCallbacks
         {
             loadState = GameState.Leave;
         }
+    }
+
+    public bool GetAfterThat()
+    {
+        return precedence;
     }
 
     public void LeaveRoom()//退出ボタン
