@@ -13,6 +13,7 @@ public class GameDirector : MonoBehaviourPunCallbacks
 {
     public enum GameState { Standby, Leave, Round, InGame, Score, Set, Wait, Finish }
 
+    [SerializeField] DiceManeger diceManeger;
     [SerializeField] CardGeneration cardGeneration;
     [SerializeField] TextMove textMove;
     [SerializeField] ScorePanel scorePanel;
@@ -89,7 +90,7 @@ public class GameDirector : MonoBehaviourPunCallbacks
         audioController = new AudioController(bgm, bgmClip);
         audioController.ChengePlayAudio(true);
 
-        loadState = GameState.Round;
+       // loadState = GameState.Round;
         maxRound = textMove.GetRound();
     }
 
@@ -106,9 +107,6 @@ public class GameDirector : MonoBehaviourPunCallbacks
                 loadState = GameState.Wait;
             }
         }
-       
-
-        Debug.Log(loadState);
     }
 
     void OnGameState()//ゲームのステート
@@ -249,7 +247,22 @@ public class GameDirector : MonoBehaviourPunCallbacks
 
     }
 
+    public void SelectAfterThat(bool after)
+    {
+        precedence = after;
+        photonView.RPC(nameof(YourAfterThat), RpcTarget.Others, !after);
+        diceManeger.gameObject.SetActive(false);
+        loadState = GameState.Round;
 
+    }
+
+    [PunRPC]
+    public void YourAfterThat(bool b)
+    {
+        precedence = b;
+        diceManeger.gameObject.SetActive(false);
+        loadState = GameState.Round;
+    }
 
     [PunRPC]
     public void YourTotalScore(int s)//相手側に自分の最終スコアを渡す

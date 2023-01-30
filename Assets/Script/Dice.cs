@@ -17,7 +17,7 @@ public class Dice : MonoBehaviourPunCallbacks
         get { return _diceState; }
         set
         {
-            if(value != _diceState)
+            if( _diceState != value )
             {
                 _diceState = value;
                 ChengeState();
@@ -26,6 +26,7 @@ public class Dice : MonoBehaviourPunCallbacks
         }
     }
 
+    public Dice dice;
     [SerializeField] List<Sprite> diceSprites;
     [SerializeField] RectTransform diceRect;
     [SerializeField] Image diceImage;
@@ -33,7 +34,7 @@ public class Dice : MonoBehaviourPunCallbacks
     [SerializeField] float maxUp = 400f;
     [SerializeField] float upSpeed = 2f;
     [SerializeField] GameObject afterThenButton;
-    [SerializeField] List<Button> buttons;
+    [SerializeField] Button button;
     private int _number;
     public int number
     {
@@ -44,18 +45,8 @@ public class Dice : MonoBehaviourPunCallbacks
             photonView.RPC(nameof(YourChengeSprit), RpcTarget.Others, _number);
         }
     }
-    private int _yourNumber;
-    public int yourNumber
-    {
-        get { return _yourNumber; }
-        set
-        {
-            _yourNumber = value;
-            youCheck = true;
-            
-        }
-    }
 
+    public int yourNumber;
     
     private int _finishNumber;
     public int finishNumber
@@ -64,55 +55,77 @@ public class Dice : MonoBehaviourPunCallbacks
         set
         {
             _finishNumber = value;
-            photonView.RPC(nameof(YourFinish), RpcTarget.Others, finishNumber);
-            
+            photonView.RPC(nameof(YourFinish), RpcTarget.Others, _finishNumber);
         }
     }
     private bool start;
 
-    bool check = false;
+    public bool _check;
+    bool check
+    {
+        get { return _check; }
+        set
+        {
+            _check = value;
+            diceState = DiceState.Wait;
+        }
+    }
     bool youCheck = false;
-   
-    
+
+
     public void ChengeState()
     {
-        switch(diceState)
+        switch (diceState)
         {
             case DiceState.Standby:
-                if (PhotonNetwork.IsMasterClient)
+                button.gameObject.SetActive(true);
+                check = false;
+                youCheck = false;
+                break;
+            case DiceState.Roll:
+                diceRect.DOAnchorPosY(maxUp, upSpeed).OnComplete(() => diceRect.DOAnchorPosY(0, upSpeed).OnComplete(() => check = true));
+
+                break;
+            case DiceState.Wait:
+                finishNumber = int.Parse(diceImage.sprite.name);
+                if (youCheck == check)
                 {
-                    buttons[0].gameObject.SetActive(true);
+                    photonView.RPC(nameof(YourCheck), RpcTarget.Others, true);
+                    diceState = DiceState.Finish;
                 }
                 else
                 {
-                    buttons[1].gameObject.SetActive(true);
+                    photonView.RPC(nameof(YourCheck), RpcTarget.Others, true);
                 }
                 break;
-            case DiceState.Roll:
-                StartCoroutine(DiceRoll());
-               
-                break;
-            case DiceState.Wait:
-                check = true;
-                finishNumber = int.Parse(diceImage.sprite.name);
-                break;
             case DiceState.Finish:
-               
+
                 Judge();
                 break;
-        }    
+        }
     }
 
     void Start()
     {
-        if(PhotonNetwork.IsMasterClient)
+    /*    if(PhotonNetwork.IsMasterClient)
         {
             buttons[1].gameObject.SetActive(false);
         }
         else
         {
             buttons[0].gameObject.SetActive(false);
+        }*/
+
+        if(transform.parent == null)
+        {
+            button.gameObject.SetActive(false);
+            transform.parent = GameObject.Find("DiceManeger").transform;
         }
+
+
+        afterThenButton = GameObject.Find("firstThen");
+
+        StartCoroutine(GetStart());
     }
 
     void Update()
@@ -125,13 +138,31 @@ public class Dice : MonoBehaviourPunCallbacks
         }
 
         if (diceState == DiceState.Wait)
-        {
-            if (youCheck && youCheck == check)
+        {           
+
+            if (dice.GetCheck() == check)
             {
                 diceState = DiceState.Finish;
             }
         }
 
+    }
+
+    IEnumerator GetStart()
+    {
+        yield return new WaitForSeconds(2);
+
+        dice = GameObject.Find("Dice(Clone)").GetComponent<Dice>();
+    }
+
+    public bool GetCheck()
+    {
+        return youCheck;
+    }
+
+    public int GetYourNumber()
+    {
+        return yourNumber;
     }
 
     public void OnDiceRoll(Button b)
@@ -140,41 +171,38 @@ public class Dice : MonoBehaviourPunCallbacks
         diceState = DiceState.Roll;
     }
 
-    IEnumerator DiceRoll()
-    {
-        diceRect.DOAnchorPosY(maxUp, upSpeed).OnComplete(() => diceRect.DOAnchorPosY(0, upSpeed));
-        yield return new WaitForSeconds(5);
-
-        diceState = DiceState.Wait;
-    }
-
     [PunRPC]
     public void YourChengeSprit(int num)
     {
         yourDiceImage.sprite = diceSprites[num];
+        yourNumber = num;
+    }
+
+    [PunRPC]
+    public void YourCheck(bool c)
+    {
+        youCheck = c;
     }
 
     [PunRPC]
     public void YourFinish(int n)
     {
+        Debug.Log(n);
         yourNumber = n;
     }
 
-    public void Judge()
+    private void Judge()
     {
+
         Debug.Log($"{yourNumber} vs {finishNumber}");
 
-        if (yourNumber < finishNumber)
+        if (dice.GetYourNumber() < finishNumber)
         {
-            afterThenButton.SetActive(true);
+            afterThenButton.transform.DOScaleX(1, 0.5f);
         }
-        else if(yourNumber == finishNumber)
+        else if(dice.GetYourNumber() == finishNumber)
         {
             diceState = DiceState.Standby;
-        }
-        else
-        {
-            afterThenButton.SetActive(false);
         }
     }
 }
