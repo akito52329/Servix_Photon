@@ -62,12 +62,17 @@ MonoBehaviour:
   cardData: {fileID: 750388555932283954, guid: 1a4c862b688f3b94d95e616934d31fa5, type: 3}
   getCard: {fileID: 0}
   myButton: {fileID: 0}
+  cardGeneration: {fileID: 0}
   audio: {fileID: 0}
+  data: {fileID: 11400000, guid: 246f2185857060f4683996f1f403a49a, type: 2}
+  seClip: {fileID: 0}
+  id: 0
   name: "\u304B\u3089\u3059"
   nameTop: 12363
   nameEnd: 12377
   myColor: {r: 0, g: 0, b: 0, a: 1}
   myNumber: 10
+  myPosNumber: 0
 --- !u!114 &2395349960564780761
 MonoBehaviour:
   m_ObjectHideFlags: 0

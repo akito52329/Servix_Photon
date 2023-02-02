@@ -40,7 +40,6 @@ public class FinalScoreText : MonoBehaviour
         {
             if (_finalYourScore != value)
             {
-                Debug.Log("kajsjdjdjdj");
                 _finalYourScore = value;
                 yourTotalScoreText.text = _finalYourScore.ToString();
                 ScaleUp();
@@ -60,18 +59,12 @@ public class FinalScoreText : MonoBehaviour
 
     [SerializeField] RectTransform rectTransform;
 
-   /* public int FinalScore(int score ,float time, bool first)//最終スコア
+    private void Start()
     {
-        Debug.Log(888);
-        this.time = (int)time;
-        timeScore = this.time / proportion;
-        if(!first)
-        {
-            firstBonus = 0;
-        }
-        detailText.text = timeScore + "=" + this.time + "/" + proportion + $"\n{firstBonus}";
-        return finalScore = score + timeScore + firstBonus;
-    }*/
+        
+    }
+
+
 
     public void FinalScore(int score, float time, bool first)//最終スコア
     {
@@ -82,20 +75,16 @@ public class FinalScoreText : MonoBehaviour
         {
             firstBonus = 0;
         }
-        detailText.text = timeScore + "=" + this.time + "/" + proportion + $"\n{firstBonus}";
-        finalScore = score + timeScore + firstBonus;
+        detailText.text =　"ゲームスコア：" + score + 
+           "\nタイムボーナス：" + this.time + "/" + proportion + " = " + timeScore;
+        finalScore = score + timeScore;
     }
 
     public void GameScore()//最終スコア表示
     {
         Debug.Log($"{finalScore} vs {finalYourScore}");
 
-        if (finalScore == finalYourScore)//スコアが同じ
-        {
-            resultText.color = drawColor;
-            resultText.text = evenly;
-        }
-        else if (finalScore > finalYourScore)//勝ったとき
+        if (finalScore > finalYourScore)//勝ったとき
         {
             resultText.color = winColor;
             resultText.text = dominance;
@@ -107,8 +96,12 @@ public class FinalScoreText : MonoBehaviour
             resultText.text = inferiority;
             audio.LoseAudio();
         }
-        Debug.Log($"{finalScore} vs {finalYourScore} :" +
-            resultText.text);
+        else if (finalScore == finalYourScore)//スコアが同じ
+        {
+            resultText.color = drawColor;
+            resultText.text = evenly;
+        }
+
     }
 
     public void ScaleUp()

@@ -134,12 +134,6 @@ public class RoleCheck : MonoBehaviour
         set
         {
             _stepCount = value;
-
-           /* if(_stepCount >= 2)
-            {
-
-                _stepCount = 0;
-            }*/
         }
     }
 

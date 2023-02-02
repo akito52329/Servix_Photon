@@ -32,14 +32,6 @@ public class GetCard : MonoBehaviour
             }
         }
     }
-    /*
-    public void ClickCard(Button button)//ボタンが押されたときに
-    {
-        if (_onClickCount <= cardGene.clickObject.Length)
-        {
-            button.interactable = false;
-        }
-    }*/
 
     public void SelectCard()
     {

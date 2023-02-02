@@ -71,7 +71,6 @@ public class ObjectData : MonoBehaviour
         
 
 
-        // 
         se = GetComponent<AudioSource>();
         audioController = new AudioController(se, seClip);
 
@@ -131,9 +130,6 @@ public class ObjectData : MonoBehaviour
 
     private void ClickCard()//ボタンが押されたときに
     {
-
-
-
         myButton.interactable = false;
 
         if (getCard.onClickCount <= cardGeneration.clickObject.Length)

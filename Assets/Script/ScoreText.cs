@@ -30,7 +30,7 @@ public class ScoreText : MonoBehaviour
 
     public int totalScore;
     public int yourScore = 0;
-    private int _score = 100;//スコア取得
+    private int _score = 0;//スコア取得
     public int score
     {
         get
@@ -44,11 +44,6 @@ public class ScoreText : MonoBehaviour
             TotalScore();
         }
 
-    }
-
-    void Start()
-    {
-        totalScore += 100;
     }
 
     public void RoleScore()

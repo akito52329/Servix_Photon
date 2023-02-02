@@ -51,12 +51,6 @@ public class GeneratReply : MonoBehaviourPunCallbacks
          card.GetComponent<ObjectData>().SetPostionNumber(num, true);
          fast = check;
          counter++;
-       /* GameObject card = PhotonNetwork.Instantiate(name, Vector3.zero, Quaternion.identity);
-        card.transform.parent = transform;
-        card.transform.localPosition = Vector3.zero;
-        card.GetComponent<ObjectData>().SetPostionNumber(num);
-        fast = check;
-        counter++;*/
     } 
 
     private void OnInteractable(bool countCheck)
@@ -79,20 +73,6 @@ public class GeneratReply : MonoBehaviourPunCallbacks
 
     public void Numbers()
     {
-        /*List<ObjectData> od = new List<ObjectData>();
-        foreach (var k in GetComponentsInChildren<GameObject>())
-        {
-            od.Add(k.GetComponentInChildren<ObjectData>());
-        }
-        Debug.Log(od.Count);
-        int[] nums = new int[od.Count];
-        for(int i = 0; i < od.Count; i++)
-        {
-
-            nums[i] = od[i].GetPostionNumber();
-        }
-
-        photonView.RPC(nameof(SetNumber), RpcTarget.OthersBuffered, nums);*/
         ObjectData[] od = GetComponentsInChildren<ObjectData>();
         int[] nums = new int[od.Length];
         for (int i = 0; i < od.Length; i++)
@@ -107,15 +87,7 @@ public class GeneratReply : MonoBehaviourPunCallbacks
     [PunRPC]
     public void SetNumber(int[] n)
     {
-        //cardGeneration.geneNum = n;
         StartCoroutine(L(n));
-        /*ObjectData[] od = GetComponentsInChildren<ObjectData>();
-        Debug.Log(od.Length);
-        for (int j = 0; j < od.Length; j++)
-        {
-            Debug.Log($"{od[j].name} , {n[j]}");
-            od[j].SetPostionNumber(n[j]);
-        }*/
     }
 
     IEnumerator L(int[] n)

@@ -46,7 +46,6 @@ public class GameDirector : MonoBehaviourPunCallbacks
         set
         {
             _chenge = value;
-           // ChengeInteractable(textMove.round == 1);
         }
     }
 
@@ -90,7 +89,6 @@ public class GameDirector : MonoBehaviourPunCallbacks
         audioController = new AudioController(bgm, bgmClip);
         audioController.ChengePlayAudio(true);
 
-       // loadState = GameState.Round;
         maxRound = textMove.GetRound();
     }
 
@@ -188,12 +186,13 @@ public class GameDirector : MonoBehaviourPunCallbacks
                 }
                 break;
             case GameState.Finish:
+                photonView.RPC(nameof(YourScore), RpcTarget.Others, scoreTextCo.totalScore);
                 audioController.ChengePlayAudio(false);
                 timer.ChengeCountTime(false);
                 waitPanel.SetActive(false);
-                finalScoreText.FinalScore(scoreTextCo.totalScore, timer.SetTime(), first);
-                photonView.RPC(nameof(YourTotalScore), RpcTarget.Others, finalScoreText.finalScore);
-                finalScoreText.gameObject.SetActive(true);
+
+                StartCoroutine(FinishAction());
+
                 break;
         }
     }
@@ -204,6 +203,19 @@ public class GameDirector : MonoBehaviourPunCallbacks
         {
             loadState = GameState.Leave;
         }
+    }
+
+    IEnumerator FinishAction()
+    {
+        finalScoreText.FinalScore(scoreTextCo.totalScore, timer.SetTime(), first);
+        photonView.RPC(nameof(YourTotalScore), RpcTarget.Others, finalScoreText.finalScore);
+
+        yield return new WaitForSeconds(1);
+
+        finalScoreText.gameObject.SetActive(true);
+
+        yield return null;
+        
     }
 
     public bool GetAfterThat()
