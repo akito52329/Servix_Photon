@@ -109,7 +109,7 @@ public class ObjectData : MonoBehaviour
     {
         myPosNumber = num;
 
-        if (/*!cardGeneration.master*/!n)
+        if (!n)
         {
             GameObject g = GameObject.Find("CardPos");
             Debug.Log(g.name);
@@ -135,7 +135,6 @@ public class ObjectData : MonoBehaviour
         if (getCard.onClickCount <= cardGeneration.clickObject.Length)
         {
             cardGeneration.clickObject[getCard.onClickCount] = myPosNumber;
-            getCard.SelectCard();
         }
 
         if (roleCheck != null)

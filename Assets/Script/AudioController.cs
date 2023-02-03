@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class AudioController : MonoBehaviour
 {
-    public AudioSource clickAudio;
-    public AudioSource roundAudio;
-    public AudioSource winAudio;
-    public AudioSource loseAudio;
-    public AudioSource decisionAudio;
-    public AudioSource searchAudio;
-    public AudioSource fadeAudio;
+    [SerializeField] AudioSource clickAudio;
+    [SerializeField] AudioSource roundAudio;
+    [SerializeField] AudioSource winAudio;
+    [SerializeField] AudioSource loseAudio;
+    [SerializeField] AudioSource decisionAudio;
+    [SerializeField] AudioSource searchAudio;
+    [SerializeField] AudioSource fadeAudio;
 
     private AudioSource audio;
     public void DecisionAudio(bool on)//選択音

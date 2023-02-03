@@ -107,15 +107,6 @@ public class Dice : MonoBehaviourPunCallbacks
 
     void Start()
     {
-    /*    if(PhotonNetwork.IsMasterClient)
-        {
-            buttons[1].gameObject.SetActive(false);
-        }
-        else
-        {
-            buttons[0].gameObject.SetActive(false);
-        }*/
-
         if(transform.parent == null)
         {
             button.gameObject.SetActive(false);

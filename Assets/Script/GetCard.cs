@@ -32,10 +32,4 @@ public class GetCard : MonoBehaviour
             }
         }
     }
-
-    public void SelectCard()
-    {
-        //numberUi[_onClickCount].transform.position = cardGene.clickObject[_onClickCount].transform.position;
-    }
-
 }

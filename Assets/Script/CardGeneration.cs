@@ -79,7 +79,6 @@ public class CardGeneration : MonoBehaviourPunCallbacks
         genePosCount = genePos.Count;
         for (int card = 0; card < genePosCount; card++)
         {
-           // objectDatas.First().transform.position = genePos[card].transform.position;//10か所に生成
             string name = data.data[decks.First()].Name;
             generatReply.GeneratCards(name, genePos[card].transform, true, card);
             decks.RemoveAt(0);//生成したカードを除外する
@@ -151,11 +150,8 @@ public class CardGeneration : MonoBehaviourPunCallbacks
             
             GameObject o = obd.Find(n => n.GetPostionNumber() == objects[card]).gameObject;
             PhotonNetwork.Destroy(o);
-           // clickObject[card].transform.position = cardInitialPos.transform.position;
             getCard.numberUi[card].transform.position = numInitialPos.transform.position;
         }
-     /*   gameDirector.chenge = true;
-        photonView.RPC(nameof(GiveChenge), RpcTarget.Others, gameDirector.chenge);*/
     }
 
 }

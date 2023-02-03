@@ -29,10 +29,4 @@ public class DiceManeger : MonoBehaviourPunCallbacks
         }
         
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
